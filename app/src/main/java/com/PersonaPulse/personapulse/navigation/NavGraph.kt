@@ -1,12 +1,13 @@
-package com.example.personapulse.navigation
+package com.PersonaPulse.personapulse.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.personapulse.ui.DashboardScreen
+import com.PersonaPulse.personapulse.ui.DashboardScreen
 
-
+//sets up navigation using a sealed class for route safety
+//it has one screen which is the dashboard but it is built to scale.
 sealed class Screen(val route: String) {
     object Dashboard : Screen("dashboard")
 }

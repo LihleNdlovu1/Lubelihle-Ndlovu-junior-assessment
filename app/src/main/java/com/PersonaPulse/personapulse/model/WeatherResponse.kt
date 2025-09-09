@@ -1,7 +1,9 @@
-package com.example.personapulse.model
+package com.PersonaPulse.personapulse.model
 
 import kotlinx.serialization.Serializable
 
+//Data Model for the weather API responses
+//separated general data from currentWeather
 @Serializable
 data class WeatherResponse(
     val latitude: Double,

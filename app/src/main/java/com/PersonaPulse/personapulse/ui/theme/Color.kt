@@ -1,4 +1,4 @@
-package com.example.personapulse.ui.theme
+package com.PersonaPulse.personapulse.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

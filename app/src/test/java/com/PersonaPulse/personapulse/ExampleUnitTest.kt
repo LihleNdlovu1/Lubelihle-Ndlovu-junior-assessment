@@ -1,4 +1,4 @@
-package com.example.personapulse
+package com.PersonaPulse.personapulse
 
 import org.junit.Test
 

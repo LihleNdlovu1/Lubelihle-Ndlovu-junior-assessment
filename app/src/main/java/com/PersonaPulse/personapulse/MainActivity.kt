@@ -1,4 +1,4 @@
-package com.example.personapulse
+package com.PersonaPulse.personapulse
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.example.personapulse.navigation.NavGraph
+import com.PersonaPulse.personapulse.navigation.NavGraph
 
 @Composable
 fun PersonaPulseApp() {

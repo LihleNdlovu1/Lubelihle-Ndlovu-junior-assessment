@@ -1,4 +1,4 @@
-package com.example.personapulse
+package com.PersonaPulse.personapulse
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

@@ -1,9 +1,11 @@
-package com.example.personapulse.network
+package com.PersonaPulse.personapulse.network
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+
+//centralises all network configurations and also separates the clients for weather and geocoding.
 
 object ApiClient {
     private const val BASE_URL = "https://api.open-meteo.com/"
@@ -42,8 +44,4 @@ object ApiClient {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(GeocodingService::class.java)
-
-
-
-
 }

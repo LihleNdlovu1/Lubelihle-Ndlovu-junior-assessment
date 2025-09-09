@@ -1,4 +1,4 @@
-package com.example.personapulse.network
+package com.PersonaPulse.personapulse.network
 
 import retrofit2.http.GET
 import retrofit2.http.Query

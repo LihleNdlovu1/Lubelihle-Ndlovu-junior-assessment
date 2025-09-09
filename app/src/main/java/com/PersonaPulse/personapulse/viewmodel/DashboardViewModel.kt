@@ -1,4 +1,4 @@
-package com.example.personapulse.viewmodel
+package com.PersonaPulse.personapulse.viewmodel
 
 import android.app.Application
 import android.content.Context
@@ -11,9 +11,9 @@ import android.print.PrintDocumentInfo
 import android.print.PrintManager
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.personapulse.model.TodoData
-import com.example.personapulse.model.WeatherResponse
-import com.example.personapulse.network.ApiClient
+import com.PersonaPulse.personapulse.model.TodoData
+import com.PersonaPulse.personapulse.model.WeatherResponse
+import com.PersonaPulse.personapulse.network.ApiClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

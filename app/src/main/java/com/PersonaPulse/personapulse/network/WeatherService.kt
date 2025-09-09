@@ -1,4 +1,4 @@
-package com.example.personapulse.network
+package com.PersonaPulse.personapulse.network
 
 interface WeatherService {
     @retrofit2.http.GET("v1/forecast")
@@ -6,5 +6,5 @@ interface WeatherService {
         @retrofit2.http.Query("latitude") latitude: Double,
         @retrofit2.http.Query("longitude") longitude: Double,
         @retrofit2.http.Query("current_weather") current: Boolean = true
-    ): com.example.personapulse.model.WeatherResponse
+    ): com.PersonaPulse.personapulse.model.WeatherResponse
 }

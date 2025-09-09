@@ -1,4 +1,4 @@
-package com.example.personapulse.ui
+package com.PersonaPulse.personapulse.ui
 
 import android.app.DatePickerDialog
 import androidx.compose.foundation.layout.Arrangement
@@ -43,8 +43,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.personapulse.ui.components.GoalCard
-import com.example.personapulse.viewmodel.DashboardViewModel
+import com.PersonaPulse.personapulse.ui.components.TodoCard
+import com.PersonaPulse.personapulse.viewmodel.DashboardViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -192,7 +192,7 @@ fun DashboardScreen(navController: NavController, viewModel: DashboardViewModel 
                 )
 
                 incompleteGoals.forEach { goal ->
-                    GoalCard(
+                    TodoCard(
                         goal,
                         onToggle = { viewModel.toggleGoalCompleted(goals.indexOf(goal)) },
                         onEdit = {
@@ -219,7 +219,7 @@ fun DashboardScreen(navController: NavController, viewModel: DashboardViewModel 
                 )
 
                 completedGoals.forEach { goal ->
-                    GoalCard(
+                    TodoCard(
                         goal,
                         onToggle = { viewModel.toggleGoalCompleted(goals.indexOf(goal)) },
                         onEdit = {
