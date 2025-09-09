@@ -1,6 +1,8 @@
 TODO App (Android)
 A simple Android TODO list application with built-in weather integration.
 This app helps users manage their tasks while also showing real-time temperature, sunrise, and sunset times, making it easier to plan the day effectively.
+
+
 Features
 Task Management
 •	Add tasks with a title and description
