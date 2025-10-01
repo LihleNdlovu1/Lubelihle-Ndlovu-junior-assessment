@@ -1,201 +1,222 @@
 package com.PersonaPulse.personapulse.viewmodel
 
 import android.app.Application
-import android.content.Context
-import android.os.Bundle
-import android.os.ParcelFileDescriptor
-import android.print.PageRange
-import android.print.PrintAttributes
-import android.print.PrintDocumentAdapter
-import android.print.PrintDocumentInfo
-import android.print.PrintManager
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.PersonaPulse.personapulse.model.TodoData
-import com.PersonaPulse.personapulse.model.WeatherResponse
-import com.PersonaPulse.personapulse.network.ApiClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import java.io.File
-import java.io.FileOutputStream
-import java.io.PrintWriter
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import com.PersonaPulse.personapulse.model.TodoData
+import com.PersonaPulse.personapulse.model.WeatherResponse
+import com.PersonaPulse.personapulse.network.WeatherService
+import kotlin.random.Random
 
 class DashboardViewModel(application: Application) : AndroidViewModel(application) {
-    private val _selectedCity = MutableStateFlow("Johannesburg")
-    val selectedCity: StateFlow<String> = _selectedCity
-
+    
+    // Todo-related state
+    private val _todos = MutableStateFlow<List<TodoData>>(emptyList())
+    val todos: StateFlow<List<TodoData>> = _todos.asStateFlow()
+    
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+    
+    // Weather-related state
     private val _weather = MutableStateFlow<WeatherResponse?>(null)
-    val weather: StateFlow<WeatherResponse?> = _weather
-
-
+    val weather: StateFlow<WeatherResponse?> = _weather.asStateFlow()
+    
     private val _weatherError = MutableStateFlow<String?>(null)
-    val weatherError: StateFlow<String?> = _weatherError
-
+    val weatherError: StateFlow<String?> = _weatherError.asStateFlow()
+    
     private val _isWeatherLoading = MutableStateFlow(false)
-    val isWeatherLoading: StateFlow<Boolean> = _isWeatherLoading
-
-    private val _selectedCategory = MutableStateFlow("top")
-    val selectedCategory: StateFlow<String> = _selectedCategory
-
-    private val _goals = MutableStateFlow<List<TodoData>>(emptyList())
-    val goals: StateFlow<List<TodoData>> = _goals
-
-    private val fileName = "goals.json"
-    private val file = File(application.filesDir, fileName)
-
+    val isWeatherLoading: StateFlow<Boolean> = _isWeatherLoading.asStateFlow()
+    
+    private val _selectedCity = MutableStateFlow<String?>(null)
+    val selectedCity: StateFlow<String?> = _selectedCity.asStateFlow()
+    
     init {
-        loadGoals()
+        loadMockData()
     }
-
-    fun setCity(city: String) {
-        _selectedCity.value = city
-        fetchWeather()
-    }
-
-    fun addGoal(title: String, dueDate: Long? = null) {
-        val updated = _goals.value + TodoData(title = title, dueDate = dueDate)
-        _goals.value = updated
-        saveGoals(updated)
-    }
-
-    fun updateGoal(index: Int, title: String, dueDate: Long?) {
-        val updated = _goals.value.toMutableList().apply {
-            this[index] = this[index].copy(title = title, dueDate = dueDate)
+    
+    private fun loadMockData() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            
+            // Mock todo data
+            val mockTodos = listOf(
+                TodoData(
+                    title = "Complete project proposal",
+                    description = "Draft and review the Q4 project proposal",
+                    priority = com.PersonaPulse.personapulse.model.Priority.HIGH,
+                    category = "Work"
+                ),
+                TodoData(
+                    title = "Grocery shopping",
+                    description = "Buy ingredients for weekend cooking",
+                    priority = com.PersonaPulse.personapulse.model.Priority.MEDIUM,
+                    category = "Personal"
+                ),
+                TodoData(
+                    title = "Call dentist",
+                    description = "Schedule annual checkup",
+                    priority = com.PersonaPulse.personapulse.model.Priority.LOW,
+                    category = "Health"
+                )
+            )
+            
+            _todos.value = mockTodos
+            _isLoading.value = false
         }
-        _goals.value = updated
-        saveGoals(updated)
     }
-
-    fun toggleGoalCompleted(index: Int) {
-        val updated = _goals.value.toMutableList().apply {
-            this[index] = this[index].copy(isCompleted = !this[index].isCompleted)
+    
+    fun addTodo(todo: TodoData) {
+        viewModelScope.launch {
+            val currentTodos = _todos.value.toMutableList()
+            currentTodos.add(todo)
+            _todos.value = currentTodos
         }
-        _goals.value = updated
-        saveGoals(updated)
     }
-
+    
+    fun updateTodo(todo: TodoData) {
+        viewModelScope.launch {
+            val currentTodos = _todos.value.toMutableList()
+            val index = currentTodos.indexOfFirst { it.id == todo.id }
+            if (index != -1) {
+                currentTodos[index] = todo
+                _todos.value = currentTodos
+            }
+        }
+    }
+    
+    fun deleteTodo(todoId: String) {
+        viewModelScope.launch {
+            val currentTodos = _todos.value.toMutableList()
+            currentTodos.removeAll { it.id == todoId }
+            _todos.value = currentTodos
+        }
+    }
+    
+    fun toggleTodoCompletion(todoId: String) {
+        viewModelScope.launch {
+            val currentTodos = _todos.value.toMutableList()
+            val index = currentTodos.indexOfFirst { it.id == todoId }
+            if (index != -1) {
+                val todo = currentTodos[index]
+                val updatedTodo = todo.copy(
+                    isCompleted = !todo.isCompleted,
+                    completedAt = if (!todo.isCompleted) System.currentTimeMillis() else null
+                )
+                currentTodos[index] = updatedTodo
+                _todos.value = currentTodos
+            }
+        }
+    }
+    
+    // Additional methods for index-based operations (for compatibility with UI)
+    fun toggleTodoCompleted(index: Int) {
+        viewModelScope.launch {
+            val currentTodos = _todos.value.toMutableList()
+            if (index in 0 until currentTodos.size) {
+                val todo = currentTodos[index]
+                val updatedTodo = todo.copy(
+                    isCompleted = !todo.isCompleted,
+                    completedAt = if (!todo.isCompleted) System.currentTimeMillis() else null
+                )
+                currentTodos[index] = updatedTodo
+                _todos.value = currentTodos
+            }
+        }
+    }
+    
+    fun deleteTodo(index: Int) {
+        viewModelScope.launch {
+            val currentTodos = _todos.value.toMutableList()
+            if (index in 0 until currentTodos.size) {
+                currentTodos.removeAt(index)
+                _todos.value = currentTodos
+            }
+        }
+    }
+    
+    fun addTodo(title: String, description: String?, priority: com.PersonaPulse.personapulse.model.Priority, dueDate: Long?) {
+        viewModelScope.launch {
+            val newTodo = TodoData(
+                title = title,
+                description = description,
+                priority = priority,
+                dueDate = dueDate,
+                category = "General"
+            )
+            val currentTodos = _todos.value.toMutableList()
+            currentTodos.add(newTodo)
+            _todos.value = currentTodos
+        }
+    }
+    
+    fun updateTodo(index: Int, title: String, description: String?, priority: com.PersonaPulse.personapulse.model.Priority, dueDate: Long?) {
+        viewModelScope.launch {
+            val currentTodos = _todos.value.toMutableList()
+            if (index in 0 until currentTodos.size) {
+                val existingTodo = currentTodos[index]
+                val updatedTodo = existingTodo.copy(
+                    title = title,
+                    description = description,
+                    priority = priority,
+                    dueDate = dueDate
+                )
+                currentTodos[index] = updatedTodo
+                _todos.value = currentTodos
+            }
+        }
+    }
+    
     fun fetchWeather() {
         viewModelScope.launch {
+            _isWeatherLoading.value = true
+            _weatherError.value = null
+            
             try {
-                _isWeatherLoading.value = true
-                _weatherError.value = null
-
-                val geo = ApiClient.geocodingService.searchCity(_selectedCity.value).firstOrNull()
-                if (geo != null) {
-                    val weatherResult = ApiClient.weatherService.getCurrentWeather(
-                        latitude = geo.lat.toDouble(),
-                        longitude = geo.lon.toDouble()
+                // Mock weather data for now
+                val mockWeather = WeatherResponse(
+                    latitude = -26.2041,
+                    longitude = 28.0473,
+                    generationtime_ms = 1234567890.0,
+                    utc_offset_seconds = 7200,
+                    timezone = "Africa/Johannesburg",
+                    timezone_abbreviation = "SAST",
+                    elevation = 1753.0,
+                    current_weather = com.PersonaPulse.personapulse.model.CurrentWeather(
+                        temperature = 24.0 + Random.nextDouble(-5.0, 10.0),
+                        windspeed = 5.0 + Random.nextDouble(0.0, 15.0),
+                        winddirection = Random.nextDouble(0.0, 360.0),
+                        weathercode = Random.nextInt(0, 100),
+                        is_day = 1,
+                        time = "2024-01-01T12:00"
                     )
-                    _weather.value = weatherResult
-                    _weatherError.value = null // Clear any previous errors
-                } else {
-                    _weather.value = null
-                    _weatherError.value = "City '${_selectedCity.value}' not found"
-                }
-            } catch (e: retrofit2.HttpException) {
-                _weather.value = null
-                _weatherError.value = "Weather service error: ${e.code()}"
-            } catch (e: java.net.UnknownHostException) {
-                _weather.value = null
-                _weatherError.value = "No internet connection"
-            } catch (e: java.net.SocketTimeoutException) {
-                _weather.value = null
-                _weatherError.value = "Request timeout"
-            } catch (e: com.google.gson.JsonSyntaxException) {
-                _weather.value = null
-                _weatherError.value = "Weather data format error"
+                )
+                
+                _weather.value = mockWeather
             } catch (e: Exception) {
-                _weather.value = null
-                _weatherError.value = "Weather service unavailable: ${e.message}"
-                e.printStackTrace() // Log for debugging
+                _weatherError.value = e.message ?: "Unknown error occurred"
             } finally {
                 _isWeatherLoading.value = false
             }
         }
     }
-
-
-
-    fun retryWeather() {
-        fetchWeather()
+    
+    fun setSelectedCity(city: String) {
+        _selectedCity.value = city
     }
-
-    fun exportGoalsAsPdfWithChart(context: Context) {
-        val printManager = context.getSystemService(Context.PRINT_SERVICE) as PrintManager
-        val jobName = "PersonaPulse Goals Export"
-
-        printManager.print(
-            jobName,
-            object : PrintDocumentAdapter() {
-                override fun onLayout(
-                    oldAttributes: PrintAttributes?,
-                    newAttributes: PrintAttributes?,
-                    cancellationSignal: android.os.CancellationSignal?,
-                    callback: LayoutResultCallback?,
-                    metadata: Bundle?
-                ) {
-                    val builder = PrintDocumentInfo.Builder("goals_export.pdf")
-                    builder.setContentType(PrintDocumentInfo.CONTENT_TYPE_DOCUMENT)
-                    builder.setPageCount(PrintDocumentInfo.PAGE_COUNT_UNKNOWN)
-                    callback?.onLayoutFinished(builder.build(), true)
-                }
-
-                override fun onWrite(
-                    pages: Array<out PageRange>?,
-                    destination: ParcelFileDescriptor?,
-                    cancellationSignal: android.os.CancellationSignal?,
-                    callback: WriteResultCallback?
-                ) {
-                    destination?.fileDescriptor?.let { fd ->
-                        PrintWriter(FileOutputStream(fd)).use { out ->
-                            out.println("PersonaPulse Goals\n")
-                            out.println("Total: ${_goals.value.size}")
-                            out.println("Completed: ${_goals.value.count { it.isCompleted }}")
-                            out.println("Incomplete: ${_goals.value.count { !it.isCompleted }}\n")
-
-                            _goals.value.forEach {
-                                val date = it.dueDate?.let {
-                                    " (Due: ${SimpleDateFormat("dd MMM", Locale.getDefault()).format(Date(it))})"
-                                } ?: ""
-                                out.println("${if (it.isCompleted) "[✓]" else "[ ]"} ${it.title}$date")
-                            }
-                        }
-                        callback?.onWriteFinished(arrayOf(PageRange.ALL_PAGES))
-                    }
-                }
-            },
-            null
-        )
+    
+    fun getCompletedTodosCount(): Int {
+        return _todos.value.count { it.isCompleted }
     }
-
-    private fun saveGoals(goals: List<TodoData>) {
-        viewModelScope.launch {
-            try {
-                val json = Json.encodeToString(goals)
-                file.writeText(json)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
+    
+    fun getTotalTodosCount(): Int {
+        return _todos.value.size
     }
-
-    private fun loadGoals() {
-        viewModelScope.launch {
-            try {
-                if (file.exists()) {
-                    val json = file.readText()
-                    val loaded = Json.decodeFromString<List<TodoData>>(json)
-                    _goals.value = loaded
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
+    
+    fun getHighPriorityTodosCount(): Int {
+        return _todos.value.count { it.priority == com.PersonaPulse.personapulse.model.Priority.HIGH }
     }
 }

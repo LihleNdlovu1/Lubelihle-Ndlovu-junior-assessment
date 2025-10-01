@@ -1,0 +1,784 @@
+kotlin version: 2.0.0
+error message: org.jetbrains.kotlin.util.KotlinFrontEndException: Exception while analyzing expression in (21,34) in /Users/lihlendlovu@glucode.com/AndroidStudioProjects/PersonaPulse/app/src/main/java/com/PersonaPulse/personapulse/viewmodel/AnalyticsViewModel.kt
+
+Attachments:
+causeThrowable
+java.lang.IllegalStateException: Could not read file: /Users/lihlendlovu@glucode.com/AndroidStudioProjects/PersonaPulse/app/build/tmp/kapt3/incrementalData/debug/com/PersonaPulse/personapulse/repository/TodoRepository.class; size in bytes: 0; file type: CLASS
+	at org.jetbrains.kotlin.load.kotlin.VirtualFileKotlinClass$Factory.logFileReadingErrorMessage(VirtualFileKotlinClass.kt:77)
+	at org.jetbrains.kotlin.load.kotlin.VirtualFileKotlinClass$Factory.access$logFileReadingErrorMessage(VirtualFileKotlinClass.kt:46)
+	at org.jetbrains.kotlin.load.kotlin.VirtualFileKotlinClass.getFileContents(VirtualFileKotlinClass.kt:38)
+	at org.jetbrains.kotlin.load.kotlin.FileBasedKotlinClass.loadClassAnnotations(FileBasedKotlinClass.java:138)
+	at org.jetbrains.kotlin.load.kotlin.AbstractBinaryClassAnnotationLoader.loadClassAnnotations(AbstractBinaryClassAnnotationLoader.kt:61)
+	at org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedClassDescriptor.annotations$lambda$5(DeserializedClassDescriptor.kt:98)
+	at org.jetbrains.kotlin.storage.LockBasedStorageManager$LockBasedLazyValue.invoke(LockBasedStorageManager.java:408)
+	at org.jetbrains.kotlin.storage.LockBasedStorageManager$LockBasedNotNullLazyValue.invoke(LockBasedStorageManager.java:527)
+	at org.jetbrains.kotlin.storage.StorageKt.getValue(storage.kt:42)
+	at org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedAnnotations.getAnnotations(DeserializedAnnotations.kt:28)
+	at org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedAnnotations.iterator(DeserializedAnnotations.kt:32)
+	at org.jetbrains.kotlin.descriptors.annotations.Annotations$DefaultImpls.findAnnotation(Annotations.kt:124)
+	at org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedAnnotations.findAnnotation(DeserializedAnnotations.kt:24)
+	at org.jetbrains.kotlin.resolve.SinceKotlinUtilKt.getOwnSinceKotlinVersion$consider(sinceKotlinUtil.kt:75)
+	at org.jetbrains.kotlin.resolve.SinceKotlinUtilKt.getOwnSinceKotlinVersion(sinceKotlinUtil.kt:87)
+	at org.jetbrains.kotlin.resolve.SinceKotlinUtilKt.checkSinceKotlinVersionAccessibility(sinceKotlinUtil.kt:34)
+	at org.jetbrains.kotlin.resolve.deprecation.DeprecationResolver.isHiddenBecauseOfKotlinVersionAccessibility$lambda$3(DeprecationResolver.kt:117)
+	at org.jetbrains.kotlin.storage.LockBasedStorageManager$MapBasedMemoizedFunction.invoke(LockBasedStorageManager.java:578)
+	at org.jetbrains.kotlin.storage.LockBasedStorageManager$MapBasedMemoizedFunctionToNotNull.invoke(LockBasedStorageManager.java:681)
+	at org.jetbrains.kotlin.resolve.deprecation.DeprecationResolver.isHiddenInResolution(DeprecationResolver.kt:159)
+	at org.jetbrains.kotlin.resolve.deprecation.DeprecationResolver.isHiddenInResolution(DeprecationResolver.kt:145)
+	at org.jetbrains.kotlin.resolve.deprecation.DeprecationResolver.isHiddenInResolution$default(DeprecationResolver.kt:137)
+	at org.jetbrains.kotlin.resolve.calls.tower.KotlinResolutionStatelessCallbacksImpl.isHiddenInResolution(KotlinResolutionStatelessCallbacksImpl.kt:66)
+	at org.jetbrains.kotlin.resolve.calls.model.SimpleCandidateFactory.createCandidate(SimpleCandidateFactory.kt:158)
+	at org.jetbrains.kotlin.resolve.calls.model.SimpleCandidateFactory.createCandidate(SimpleCandidateFactory.kt:110)
+	at org.jetbrains.kotlin.resolve.calls.model.SimpleCandidateFactory.createCandidate(SimpleCandidateFactory.kt:29)
+	at org.jetbrains.kotlin.resolve.calls.tower.AbstractSimpleScopeTowerProcessor.createCandidates(ScopeTowerProcessors.kt:124)
+	at org.jetbrains.kotlin.resolve.calls.tower.NoExplicitReceiverScopeTowerProcessor.simpleProcess(ScopeTowerProcessors.kt:195)
+	at org.jetbrains.kotlin.resolve.calls.tower.SimpleScopeTowerProcessor.process(ScopeTowerProcessors.kt:109)
+	at org.jetbrains.kotlin.resolve.calls.tower.PrioritizedCompositeScopeTowerProcessor.process(ScopeTowerProcessors.kt:41)
+	at org.jetbrains.kotlin.resolve.calls.tower.TowerResolver.processTowerData(TowerResolver.kt:383)
+	at org.jetbrains.kotlin.resolve.calls.tower.TowerResolver.access$processTowerData(TowerResolver.kt:95)
+	at org.jetbrains.kotlin.resolve.calls.tower.TowerResolver$Task.process(TowerResolver.kt:207)
+	at org.jetbrains.kotlin.resolve.calls.tower.TowerResolver$Task.process(TowerResolver.kt:216)
+	at org.jetbrains.kotlin.resolve.calls.tower.TowerResolver$Task.run$processImportingScope(TowerResolver.kt)
+	at org.jetbrains.kotlin.resolve.calls.tower.TowerResolver$Task.run$processScopes(TowerResolver.kt:282)
+	at org.jetbrains.kotlin.resolve.calls.tower.TowerResolver$Task.run(TowerResolver.kt:305)
+	at org.jetbrains.kotlin.resolve.calls.tower.TowerResolver.run(TowerResolver.kt:114)
+	at org.jetbrains.kotlin.resolve.calls.tower.TowerResolver.runResolve(TowerResolver.kt:101)
+	at org.jetbrains.kotlin.resolve.calls.KotlinCallResolver.resolveCall(KotlinCallResolver.kt:184)
+	at org.jetbrains.kotlin.resolve.calls.KotlinCallResolver.resolveAndCompleteCall(KotlinCallResolver.kt:41)
+	at org.jetbrains.kotlin.resolve.calls.tower.PSICallResolver.runResolutionAndInference(PSICallResolver.kt:114)
+	at org.jetbrains.kotlin.resolve.calls.CallResolver.doResolveCallOrGetCachedResults(CallResolver.java:602)
+	at org.jetbrains.kotlin.resolve.calls.CallResolver.lambda$computeTasksAndResolveCall$0(CallResolver.java:213)
+	at org.jetbrains.kotlin.util.PerformanceCounter.time(PerformanceCounter.kt:90)
+	at org.jetbrains.kotlin.resolve.calls.CallResolver.computeTasksAndResolveCall(CallResolver.java:211)
+	at org.jetbrains.kotlin.resolve.calls.CallResolver.computeTasksAndResolveCall(CallResolver.java:199)
+	at org.jetbrains.kotlin.resolve.calls.CallResolver.resolveFunctionCall(CallResolver.java:329)
+	at org.jetbrains.kotlin.resolve.calls.CallExpressionResolver.getResolvedCallForFunction(CallExpressionResolver.kt:86)
+	at org.jetbrains.kotlin.resolve.calls.CallExpressionResolver.getCallExpressionTypeInfoWithoutFinalTypeCheck(CallExpressionResolver.kt:208)
+	at org.jetbrains.kotlin.resolve.calls.CallExpressionResolver.getCallExpressionTypeInfo(CallExpressionResolver.kt:185)
+	at org.jetbrains.kotlin.types.expressions.BasicExpressionTypingVisitor.visitCallExpression(BasicExpressionTypingVisitor.java:731)
+	at org.jetbrains.kotlin.types.expressions.ExpressionTypingVisitorDispatcher.visitCallExpression(ExpressionTypingVisitorDispatcher.java:396)
+	at org.jetbrains.kotlin.types.expressions.ExpressionTypingVisitorDispatcher$ForDeclarations.visitCallExpression(ExpressionTypingVisitorDispatcher.java:47)
+	at org.jetbrains.kotlin.psi.KtCallExpression.accept(KtCallExpression.java:35)
+	at org.jetbrains.kotlin.types.expressions.ExpressionTypingVisitorDispatcher.lambda$getTypeInfo$0(ExpressionTypingVisitorDispatcher.java:176)
+	at org.jetbrains.kotlin.util.PerformanceCounter.time(PerformanceCounter.kt:90)
+	at org.jetbrains.kotlin.types.expressions.ExpressionTypingVisitorDispatcher.getTypeInfo(ExpressionTypingVisitorDispatcher.java:165)
+	at org.jetbrains.kotlin.types.expressions.ExpressionTypingVisitorDispatcher.getTypeInfo(ExpressionTypingVisitorDispatcher.java:135)
+	at org.jetbrains.kotlin.types.expressions.ExpressionTypingVisitorDispatcher.getTypeInfo(ExpressionTypingVisitorDispatcher.java:147)
+	at org.jetbrains.kotlin.types.expressions.ExpressionTypingServices.getTypeInfo(ExpressionTypingServices.java:121)
+	at org.jetbrains.kotlin.types.expressions.ExpressionTypingServices.getTypeInfo(ExpressionTypingServices.java:96)
+	at org.jetbrains.kotlin.types.expressions.ExpressionTypingServices.getType(ExpressionTypingServices.java:138)
+	at org.jetbrains.kotlin.types.expressions.ExpressionTypingServices.safeGetType(ExpressionTypingServices.java:81)
+	at org.jetbrains.kotlin.resolve.VariableTypeAndInitializerResolver.resolveInitializerType(VariableTypeAndInitializerResolver.kt:178)
+	at org.jetbrains.kotlin.resolve.VariableTypeAndInitializerResolver.resolveTypeNullable$lambda$1(VariableTypeAndInitializerResolver.kt:94)
+	at org.jetbrains.kotlin.storage.LockBasedStorageManager$LockBasedLazyValue.invoke(LockBasedStorageManager.java:408)
+	at org.jetbrains.kotlin.storage.LockBasedStorageManager$LockBasedNotNullLazyValue.invoke(LockBasedStorageManager.java:527)
+	at org.jetbrains.kotlin.types.DeferredType.getDelegate(DeferredType.java:108)
+	at org.jetbrains.kotlin.types.WrappedType.getAttributes(KotlinType.kt:135)
+	at org.jetbrains.kotlin.types.KotlinType.getAnnotations(KotlinType.kt:57)
+	at org.jetbrains.kotlin.resolve.lazy.ForceResolveUtil.forceResolveAllContents(ForceResolveUtil.java:109)
+	at org.jetbrains.kotlin.resolve.lazy.ForceResolveUtil.doForceResolveAllContents(ForceResolveUtil.java:96)
+	at org.jetbrains.kotlin.resolve.lazy.ForceResolveUtil.forceResolveAllContents(ForceResolveUtil.java:42)
+	at org.jetbrains.kotlin.resolve.lazy.ForceResolveUtil.forceResolveAllContents(ForceResolveUtil.java:52)
+	at org.jetbrains.kotlin.resolve.lazy.ForceResolveUtil.forceResolveAllContents(ForceResolveUtil.java:47)
+	at org.jetbrains.kotlin.resolve.lazy.descriptors.LazyClassDescriptor.doForceResolveAllContents(LazyClassDescriptor.java:733)
+	at org.jetbrains.kotlin.resolve.lazy.descriptors.LazyClassDescriptor.lambda$new$4(LazyClassDescriptor.java:222)
+	at org.jetbrains.kotlin.storage.LockBasedStorageManager$LockBasedLazyValue.invoke(LockBasedStorageManager.java:408)
+	at org.jetbrains.kotlin.resolve.lazy.descriptors.LazyClassDescriptor.forceResolveAllContents(LazyClassDescriptor.java:721)
+	at org.jetbrains.kotlin.resolve.lazy.ForceResolveUtil.doForceResolveAllContents(ForceResolveUtil.java:78)
+	at org.jetbrains.kotlin.resolve.lazy.ForceResolveUtil.forceResolveAllContents(ForceResolveUtil.java:42)
+	at org.jetbrains.kotlin.resolve.jvm.extensions.PartialAnalysisHandlerExtension.doAnalysis$lambda$0(PartialAnalysisHandlerExtension.kt:73)
+	at org.jetbrains.kotlin.resolve.jvm.extensions.PartialAnalysisHandlerExtension.doForEachDeclaration(PartialAnalysisHandlerExtension.kt:126)
+	at org.jetbrains.kotlin.resolve.jvm.extensions.PartialAnalysisHandlerExtension.doForEachDeclaration(PartialAnalysisHandlerExtension.kt:141)
+	at org.jetbrains.kotlin.resolve.jvm.extensions.PartialAnalysisHandlerExtension.doAnalysis(PartialAnalysisHandlerExtension.kt:68)
+	at org.jetbrains.kotlin.kapt3.AbstractKapt3Extension.doAnalysis(Kapt3Extension.kt:130)
+	at org.jetbrains.kotlin.cli.jvm.compiler.TopDownAnalyzerFacadeForJVM.analyzeFilesWithJavaIntegration(TopDownAnalyzerFacadeForJVM.kt:112)
+	at org.jetbrains.kotlin.cli.jvm.compiler.TopDownAnalyzerFacadeForJVM.analyzeFilesWithJavaIntegration$default(TopDownAnalyzerFacadeForJVM.kt:75)
+	at org.jetbrains.kotlin.cli.jvm.compiler.KotlinToJVMBytecodeCompiler.analyze$lambda$12(KotlinToJVMBytecodeCompiler.kt:373)
+	at org.jetbrains.kotlin.cli.common.messages.AnalyzerWithCompilerReport.analyzeAndReport(AnalyzerWithCompilerReport.kt:115)
+	at org.jetbrains.kotlin.cli.jvm.compiler.KotlinToJVMBytecodeCompiler.analyze(KotlinToJVMBytecodeCompiler.kt:364)
+	at org.jetbrains.kotlin.cli.jvm.compiler.KotlinToJVMBytecodeCompiler.runFrontendAndGenerateIrUsingClassicFrontend(KotlinToJVMBytecodeCompiler.kt:195)
+	at org.jetbrains.kotlin.cli.jvm.compiler.KotlinToJVMBytecodeCompiler.compileModules$cli(KotlinToJVMBytecodeCompiler.kt:106)
+	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecute(K2JVMCompiler.kt:176)
+	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecute(K2JVMCompiler.kt:50)
+	at org.jetbrains.kotlin.cli.common.CLICompiler.execImpl(CLICompiler.kt:104)
+	at org.jetbrains.kotlin.cli.common.CLICompiler.execImpl(CLICompiler.kt:48)
+	at org.jetbrains.kotlin.cli.common.CLITool.exec(CLITool.kt:101)
+	at org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunner.runCompiler(IncrementalJvmCompilerRunner.kt:453)
+	at org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunner.runCompiler(IncrementalJvmCompilerRunner.kt:62)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.doCompile(IncrementalCompilerRunner.kt:506)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compileImpl(IncrementalCompilerRunner.kt:423)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.tryCompileIncrementally$lambda$9$compile(IncrementalCompilerRunner.kt:249)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.tryCompileIncrementally(IncrementalCompilerRunner.kt:267)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compile(IncrementalCompilerRunner.kt:120)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.execIncrementalCompiler(CompileServiceImpl.kt:676)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.access$execIncrementalCompiler(CompileServiceImpl.kt:92)
+	at org.jetbrains.kotlin.daemon.CompileServiceImpl.compile(CompileServiceImpl.kt:1661)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source)
+	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+	at java.rmi/sun.rmi.server.UnicastServerRef.dispatch(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Unknown Source)
+	at java.base/java.security.AccessController.doPrivileged(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport.serviceCall(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport.handleMessages(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.lambda$run$0(Unknown Source)
+	at java.base/java.security.AccessController.doPrivileged(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+Caused by: java.io.FileNotFoundException: /Users/lihlendlovu@glucode.com/AndroidStudioProjects/PersonaPulse/app/build/tmp/kapt3/incrementalData/debug/com/PersonaPulse/personapulse/repository/TodoRepository.class (No such file or directory)
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(Unknown Source)
+	at java.base/java.io.FileInputStream.<init>(Unknown Source)
+	at org.jetbrains.kotlin.com.intellij.openapi.util.io.FileUtil.loadFileBytes(FileUtil.java:204)
+	at org.jetbrains.kotlin.com.intellij.openapi.vfs.local.CoreLocalVirtualFile.contentsToByteArray(CoreLocalVirtualFile.java:98)
+	at org.jetbrains.kotlin.load.kotlin.VirtualFileKotlinClass.getFileContents(VirtualFileKotlinClass.kt:36)
+	... 121 more
+
+----
+expression.kt
+<File name: AnalyticsViewModel.kt, Physical: true>
+class AnalyticsViewModel(application: Application) : AndroidViewModel(application) {
+    private val database = AppDatabase.getDatabase(application)
+    private val todoRepository = <ELEMENT>TodoRepository(database.todoDao())</ELEMENT>
+
+    private val _performanceStats = MutableStateFlow<PerformanceStats?>(null)
+    val performanceStats: StateFlow<PerformanceStats?> = _performanceStats
+
+    private val _productivityInsights = MutableStateFlow<ProductivityInsights?>(null)
+    val productivityInsights: StateFlow<ProductivityInsights?> = _productivityInsights
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
+    val allTodos: StateFlow<List<TodoData>> = todoRepository.getAllTodos().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
+    )
+
+    init {
+        loadAnalytics()
+    }
+
+    fun refreshAnalytics() {
+        loadAnalytics()
+    }
+
+    private fun loadAnalytics() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val todos = allTodos.value
+                val stats = calculatePerformanceStats(todos)
+                val insights = generateProductivityInsights(todos, stats)
+                
+                _performanceStats.value = stats
+                _productivityInsights.value = insights
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    private fun calculatePerformanceStats(todos: List<TodoData>): PerformanceStats {
+        val now = System.currentTimeMillis()
+        val calendar = Calendar.getInstance()
+        
+        // Basic counts
+        val totalTasks = todos.size
+        val completedTasks = todos.count { it.isCompleted }
+        val completionRate = if (totalTasks > 0) completedTasks.toFloat() / totalTasks else 0f
+        
+        // Time-based calculations
+        val today = getStartOfDay(now)
+        val weekAgo = now - (7 * 24 * 60 * 60 * 1000)
+        val monthAgo = now - (30 * 24 * 60 * 60 * 1000)
+        
+        val tasksCompletedToday = todos.count { 
+            it.isCompleted && it.completedAt != null && it.completedAt >= today 
+        }
+        val tasksCompletedThisWeek = todos.count { 
+            it.isCompleted && it.completedAt != null && it.completedAt >= weekAgo 
+        }
+        val tasksCompletedThisMonth = todos.count { 
+            it.isCompleted && it.completedAt != null && it.completedAt >= monthAgo 
+        }
+        
+        // Calculate average completion time
+        val completedWithTimestamps = todos.filter { 
+            it.isCompleted && it.completedAt != null && it.timestamp != null 
+        }
+        val averageCompletionTime = if (completedWithTimestamps.isNotEmpty()) {
+            completedWithTimestamps.map { it.completedAt!! - it.timestamp }.average().toLong()
+        } else 0L
+        
+        // Calculate streaks
+        val streakDays = calculateCurrentStreak(todos)
+        val longestStreak = calculateLongestStreak(todos)
+        
+        // Priority breakdown
+        val priorityBreakdown = PriorityBreakdown(
+            highPriorityCompleted = todos.count { it.isCompleted && it.priority == Priority.HIGH },
+            mediumPriorityCompleted = todos.count { it.isCompleted && it.priority == Priority.MEDIUM },
+            lowPriorityCompleted = todos.count { it.isCompleted && it.priority == Priority.LOW },
+            overdueTasks = todos.count { !it.isCompleted && it.priority == Priority.OVERDUE }
+        )
+        
+        // Calculate productivity score (0-100)
+        val productivityScore = calculateProductivityScore(
+            completionRate, 
+            tasksCompletedThisWeek, 
+            streakDays, 
+            priorityBreakdown
+        )
+        
+        // Generate trends
+        val weeklyTrend = generateWeeklyTrend(todos)
+        val monthlyTrend = generateMonthlyTrend(todos)
+        
+        return PerformanceStats(
+            totalTasks = totalTasks,
+            completedTasks = completedTasks,
+            completionRate = completionRate,
+            averageCompletionTime = averageCompletionTime,
+            tasksCompletedToday = tasksCompletedToday,
+            tasksCompletedThisWeek = tasksCompletedThisWeek,
+            tasksCompletedThisMonth = tasksCompletedThisMonth,
+            streakDays = streakDays,
+            longestStreak = longestStreak,
+            priorityBreakdown = priorityBreakdown,
+            productivityScore = productivityScore,
+            weeklyTrend = weeklyTrend,
+            monthlyTrend = monthlyTrend
+        )
+    }
+
+    private fun generateProductivityInsights(todos: List<TodoData>, stats: PerformanceStats): ProductivityInsights {
+        val bestPerformingDay = findBestPerformingDay(todos)
+        val bestPerformingTime = findBestPerformingTime(todos)
+        val mostProductiveCategory = findMostProductiveCategory(todos)
+        val averageTaskDuration = formatDuration(stats.averageCompletionTime)
+        val completionRateTrend = analyzeCompletionRateTrend(stats.weeklyTrend)
+        val suggestions = generateImprovementSuggestions(stats, todos)
+        
+        return ProductivityInsights(
+            bestPerformingDay = bestPerformingDay,
+            bestPerformingTime = bestPerformingTime,
+            mostProductiveCategory = mostProductiveCategory,
+            averageTaskDuration = averageTaskDuration,
+            completionRateTrend = completionRateTrend,
+            suggestions = suggestions
+        )
+    }
+
+    private fun calculateCurrentStreak(todos: List<TodoData>): Int {
+        val completedTasks = todos.filter { it.isCompleted && it.completedAt != null }
+            .sortedByDescending { it.completedAt }
+        
+        if (completedTasks.isEmpty()) return 0
+        
+        var streak = 0
+        val calendar = Calendar.getInstance()
+        var currentDate = getStartOfDay(System.currentTimeMillis())
+        
+        for (task in completedTasks) {
+            val taskDate = getStartOfDay(task.completedAt!!)
+            if (taskDate == currentDate) {
+                streak++
+                currentDate -= (24 * 60 * 60 * 1000) // Previous day
+            } else if (taskDate < currentDate) {
+                break
+            }
+        }
+        
+        return streak
+    }
+
+    private fun calculateLongestStreak(todos: List<TodoData>): Int {
+        val completedTasks = todos.filter { it.isCompleted && it.completedAt != null }
+            .sortedBy { it.completedAt }
+        
+        if (completedTasks.isEmpty()) return 0
+        
+        var maxStreak = 0
+        var currentStreak = 1
+        var lastDate = getStartOfDay(completedTasks.first().completedAt!!)
+        
+        for (i in 1 until completedTasks.size) {
+            val currentDate = getStartOfDay(completedTasks[i].completedAt!!)
+            val dayDifference = (currentDate - lastDate) / (24 * 60 * 60 * 1000)
+            
+            if (dayDifference == 1L) {
+                currentStreak++
+            } else if (dayDifference > 1L) {
+                maxStreak = maxOf(maxStreak, currentStreak)
+                currentStreak = 1
+            }
+            
+            lastDate = currentDate
+        }
+        
+        return maxOf(maxStreak, currentStreak)
+    }
+
+    private fun calculateProductivityScore(
+        completionRate: Float,
+        weeklyTasks: Int,
+        streakDays: Int,
+        priorityBreakdown: PriorityBreakdown
+    ): Int {
+        var score = 0
+        
+        // Completion rate (40 points max)
+        score += (completionRate * 40).toInt()
+        
+        // Weekly activity (30 points max)
+        score += minOf(weeklyTasks * 2, 30)
+        
+        // Streak consistency (20 points max)
+        score += minOf(streakDays * 2, 20)
+        
+        // Priority management (10 points max)
+        val highPriorityRatio = if (priorityBreakdown.highPriorityCompleted + priorityBreakdown.mediumPriorityCompleted + priorityBreakdown.lowPriorityCompleted > 0) {
+            (priorityBreakdown.highPriorityCompleted + priorityBreakdown.mediumPriorityCompleted).toFloat() / 
+            (priorityBreakdown.highPriorityCompleted + priorityBreakdown.mediumPriorityCompleted + priorityBreakdown.lowPriorityCompleted)
+        } else 0f
+        score += (highPriorityRatio * 10).toInt()
+        
+        return minOf(score, 100)
+    }
+
+    private fun generateWeeklyTrend(todos: List<TodoData>): List<DailyStats> {
+        val calendar = Calendar.getInstance()
+        val trend = mutableListOf<DailyStats>()
+        
+        for (i in 6 downTo 0) {
+            calendar.timeInMillis = System.currentTimeMillis() - (i * 24 * 60 * 60 * 1000)
+            val dayStart = getStartOfDay(calendar.timeInMillis)
+            val dayEnd = dayStart + (24 * 60 * 60 * 1000)
+            
+            val dayTasks = todos.filter { 
+                it.completedAt != null && it.completedAt >= dayStart && it.completedAt < dayEnd 
+            }
+            val createdTasks = todos.filter { 
+                it.timestamp >= dayStart && it.timestamp < dayEnd 
+            }
+            
+            val dateFormat = SimpleDateFormat("MMM dd", Locale.getDefault())
+            val productivityScore = if (createdTasks.isNotEmpty()) {
+                (dayTasks.size.toFloat() / createdTasks.size * 100).toInt()
+            } else 0
+            
+            trend.add(DailyStats(
+                date = dateFormat.format(calendar.time),
+                tasksCompleted = dayTasks.size,
+                tasksCreated = createdTasks.size,
+                productivityScore = productivityScore
+            ))
+        }
+        
+        return trend
+    }
+
+    private fun generateMonthlyTrend(todos: List<TodoData>): List<WeeklyStats> {
+        val calendar = Calendar.getInstance()
+        val trend = mutableListOf<WeeklyStats>()
+        
+        for (i in 3 downTo 0) {
+            val weekStart = System.currentTimeMillis() - ((i + 1) * 7 * 24 * 60 * 60 * 1000)
+            val weekEnd = System.currentTimeMillis() - (i * 7 * 24 * 60 * 60 * 1000)
+            
+            val weekTasks = todos.filter { 
+                it.completedAt != null && it.completedAt >= weekStart && it.completedAt < weekEnd 
+            }
+            
+            val dateFormat = SimpleDateFormat("MMM dd", Locale.getDefault())
+            val improvement = if (i < 3) {
+                val previousWeekTasks = todos.filter { 
+                    it.completedAt != null && it.completedAt >= (weekStart - (7 * 24 * 60 * 60 * 1000)) && 
+                    it.completedAt < weekStart 
+                }.size
+                if (previousWeekTasks > 0) {
+                    ((weekTasks.size - previousWeekTasks).toFloat() / previousWeekTasks * 100)
+                } else 0f
+            } else 0f
+            
+            trend.add(WeeklyStats(
+                weekStart = dateFormat.format(Date(weekStart)),
+                weekEnd = dateFormat.format(Date(weekEnd)),
+                tasksCompleted = weekTasks.size,
+                averageDailyScore = if (weekTasks.isNotEmpty()) (weekTasks.size / 7) else 0,
+                improvement = improvement
+            ))
+        }
+        
+        return trend
+    }
+
+    private fun findBestPerformingDay(todos: List<TodoData>): String {
+        val dayStats = mutableMapOf<String, Int>()
+        val dayNames = arrayOf("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
+        
+        todos.filter { it.isCompleted && it.completedAt != null }.forEach { task ->
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = task.completedAt!!
+            val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+            val dayName = dayNames[dayOfWeek - 1]
+            dayStats[dayName] = (dayStats[dayName] ?: 0) + 1
+        }
+        
+        return dayStats.maxByOrNull { it.value }?.key ?: "No data"
+    }
+
+    private fun findBestPerformingTime(todos: List<TodoData>): String {
+        val hourStats = mutableMapOf<Int, Int>()
+        
+        todos.filter { it.isCompleted && it.completedAt != null }.forEach { task ->
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = task.completedAt!!
+            val hour = calendar.get(Calendar.HOUR_OF_DAY)
+            hourStats[hour] = (hourStats[hour] ?: 0) + 1
+        }
+        
+        val bestHour = hourStats.maxByOrNull { it.value }?.key ?: 0
+        return when {
+            bestHour < 6 -> "Early Morning (12AM-6AM)"
+            bestHour < 12 -> "Morning (6AM-12PM)"
+            bestHour < 18 -> "Afternoon (12PM-6PM)"
+            else -> "Evening (6PM-12AM)"
+        }
+    }
+
+    private fun findMostProductiveCategory(todos: List<TodoData>): String? {
+        val categoryStats = mutableMapOf<String, Int>()
+        
+        todos.filter { it.isCompleted && it.category != null }.forEach { task ->
+            categoryStats[task.category!!] = (categoryStats[task.category!!] ?: 0) + 1
+        }
+        
+        return categoryStats.maxByOrNull { it.value }?.key
+    }
+
+    private fun formatDuration(milliseconds: Long): String {
+        val hours = milliseconds / (1000 * 60 * 60)
+        val minutes = (milliseconds % (1000 * 60 * 60)) / (1000 * 60)
+        
+        return when {
+            hours > 0 -> "${hours}h ${minutes}m"
+            minutes > 0 -> "${minutes}m"
+            else -> "Less than 1m"
+        }
+    }
+
+    private fun analyzeCompletionRateTrend(weeklyTrend: List<DailyStats>): String {
+        if (weeklyTrend.size < 2) return "stable"
+        
+        val recent = weeklyTrend.takeLast(3).map { it.tasksCompleted }.average()
+        val earlier = weeklyTrend.take(3).map { it.tasksCompleted }.average()
+        
+        return when {
+            recent > earlier * 1.1 -> "improving"
+            recent < earlier * 0.9 -> "declining"
+            else -> "stable"
+        }
+    }
+
+    private fun generateImprovementSuggestions(stats: PerformanceStats, todos: List<TodoData>): List<ImprovementSuggestion> {
+        val suggestions = mutableListOf<ImprovementSuggestion>()
+        
+        // Completion rate suggestions
+        when {
+            stats.completionRate < 0.3f -> {
+                suggestions.add(ImprovementSuggestion(
+                    title = "Focus on Completion",
+                    description = "Your completion rate is low. Try breaking large tasks into smaller, manageable pieces.",
+                    category = SuggestionCategory.TASK_ORGANIZATION,
+                    priority = SuggestionPriority.HIGH
+                ))
+            }
+            stats.completionRate < 0.6f -> {
+                suggestions.add(ImprovementSuggestion(
+                    title = "Improve Task Management",
+                    description = "Consider using time-blocking techniques to allocate specific time slots for tasks.",
+                    category = SuggestionCategory.TIME_MANAGEMENT,
+                    priority = SuggestionPriority.MEDIUM
+                ))
+            }
+        }
+        
+        // Streak suggestions
+        if (stats.streakDays < 3) {
+            suggestions.add(ImprovementSuggestion(
+                title = "Build Consistency",
+                description = "Try to complete at least one task every day to build a consistent habit.",
+                category = SuggestionCategory.CONSISTENCY,
+                priority = SuggestionPriority.HIGH
+            ))
+        }
+        
+        // Priority management suggestions
+        if (stats.priorityBreakdown.overdueTasks > 0) {
+            suggestions.add(ImprovementSuggestion(
+                title = "Address Overdue Tasks",
+                description = "You have ${stats.priorityBreakdown.overdueTasks} overdue tasks. Focus on completing these first.",
+                category = SuggestionCategory.TASK_ORGANIZATION,
+                priority = SuggestionPriority.HIGH
+            ))
+        }
+        
+        // Productivity score suggestions
+        when {
+            stats.productivityScore < 30 -> {
+                suggestions.add(ImprovementSuggestion(
+                    title = "Boost Productivity",
+                    description = "Try the Pomodoro Technique: work for 25 minutes, then take a 5-minute break.",
+                    category = SuggestionCategory.FOCUS,
+                    priority = SuggestionPriority.HIGH
+                ))
+            }
+            stats.productivityScore < 60 -> {
+                suggestions.add(ImprovementSuggestion(
+                    title = "Optimize Your Workflow",
+                    description = "Consider using the Eisenhower Matrix to prioritize tasks by urgency and importance.",
+                    category = SuggestionCategory.TASK_ORGANIZATION,
+                    priority = SuggestionPriority.MEDIUM
+                ))
+            }
+        }
+        
+        // Weekly activity suggestions
+        if (stats.tasksCompletedThisWeek < 5) {
+            suggestions.add(ImprovementSuggestion(
+                title = "Increase Activity",
+                description = "Aim to complete at least 5 tasks per week to maintain momentum.",
+                category = SuggestionCategory.MOTIVATION,
+                priority = SuggestionPriority.MEDIUM
+            ))
+        }
+        
+        return suggestions.take(5) // Limit to 5 suggestions
+    }
+
+    private fun getStartOfDay(timestamp: Long): Long {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = timestamp
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        return calendar.timeInMillis
+    }
+}
+	at org.jetbrains.kotlin.types.expressions.ExpressionTypingVisitorDispatcher.logOrThrowException(ExpressionTypingVisitorDispatcher.java:261)
+	at org.jetbrains.kotlin.types.expressions.ExpressionTypingVisitorDispatcher.lambda$getTypeInfo$0(ExpressionTypingVisitorDispatcher.java:225)
+	at org.jetbrains.kotlin.util.PerformanceCounter.time(PerformanceCounter.kt:90)
+	at org.jetbrains.kotlin.types.expressions.ExpressionTypingVisitorDispatcher.getTypeInfo(ExpressionTypingVisitorDispatcher.java:165)
+	at org.jetbrains.kotlin.types.expressions.ExpressionTypingVisitorDispatcher.getTypeInfo(ExpressionTypingVisitorDispatcher.java:135)
+	at org.jetbrains.kotlin.types.expressions.ExpressionTypingVisitorDispatcher.getTypeInfo(ExpressionTypingVisitorDispatcher.java:147)
+	at org.jetbrains.kotlin.types.expressions.ExpressionTypingServices.getTypeInfo(ExpressionTypingServices.java:121)
+	at org.jetbrains.kotlin.types.expressions.ExpressionTypingServices.getTypeInfo(ExpressionTypingServices.java:96)
+	at org.jetbrains.kotlin.types.expressions.ExpressionTypingServices.getType(ExpressionTypingServices.java:138)
+	at org.jetbrains.kotlin.types.expressions.ExpressionTypingServices.safeGetType(ExpressionTypingServices.java:81)
+	at org.jetbrains.kotlin.resolve.VariableTypeAndInitializerResolver.resolveInitializerType(VariableTypeAndInitializerResolver.kt:178)
+	at org.jetbrains.kotlin.resolve.VariableTypeAndInitializerResolver.resolveTypeNullable$lambda$1(VariableTypeAndInitializerResolver.kt:94)
+	at org.jetbrains.kotlin.storage.LockBasedStorageManager$LockBasedLazyValue.invoke(LockBasedStorageManager.java:408)
+	at org.jetbrains.kotlin.storage.LockBasedStorageManager$LockBasedNotNullLazyValue.invoke(LockBasedStorageManager.java:527)
+	at org.jetbrains.kotlin.types.DeferredType.getDelegate(DeferredType.java:108)
+	at org.jetbrains.kotlin.types.WrappedType.getAttributes(KotlinType.kt:135)
+	at org.jetbrains.kotlin.types.KotlinType.getAnnotations(KotlinType.kt:57)
+	at org.jetbrains.kotlin.resolve.lazy.ForceResolveUtil.forceResolveAllContents(ForceResolveUtil.java:109)
+	at org.jetbrains.kotlin.resolve.lazy.ForceResolveUtil.doForceResolveAllContents(ForceResolveUtil.java:96)
+	at org.jetbrains.kotlin.resolve.lazy.ForceResolveUtil.forceResolveAllContents(ForceResolveUtil.java:42)
+	at org.jetbrains.kotlin.resolve.lazy.ForceResolveUtil.forceResolveAllContents(ForceResolveUtil.java:52)
+	at org.jetbrains.kotlin.resolve.lazy.ForceResolveUtil.forceResolveAllContents(ForceResolveUtil.java:47)
+	at org.jetbrains.kotlin.resolve.lazy.descriptors.LazyClassDescriptor.doForceResolveAllContents(LazyClassDescriptor.java:733)
+	at org.jetbrains.kotlin.resolve.lazy.descriptors.LazyClassDescriptor.lambda$new$4(LazyClassDescriptor.java:222)
+	at org.jetbrains.kotlin.storage.LockBasedStorageManager$LockBasedLazyValue.invoke(LockBasedStorageManager.java:408)
+	at org.jetbrains.kotlin.resolve.lazy.descriptors.LazyClassDescriptor.forceResolveAllContents(LazyClassDescriptor.java:721)
+	at org.jetbrains.kotlin.resolve.lazy.ForceResolveUtil.doForceResolveAllContents(ForceResolveUtil.java:78)
+	at org.jetbrains.kotlin.resolve.lazy.ForceResolveUtil.forceResolveAllContents(ForceResolveUtil.java:42)
+	at org.jetbrains.kotlin.resolve.jvm.extensions.PartialAnalysisHandlerExtension.doAnalysis$lambda$0(PartialAnalysisHandlerExtension.kt:73)
+	at org.jetbrains.kotlin.resolve.jvm.extensions.PartialAnalysisHandlerExtension.doForEachDeclaration(PartialAnalysisHandlerExtension.kt:126)
+	at org.jetbrains.kotlin.resolve.jvm.extensions.PartialAnalysisHandlerExtension.doForEachDeclaration(PartialAnalysisHandlerExtension.kt:141)
+	at org.jetbrains.kotlin.resolve.jvm.extensions.PartialAnalysisHandlerExtension.doAnalysis(PartialAnalysisHandlerExtension.kt:68)
+	at org.jetbrains.kotlin.kapt3.AbstractKapt3Extension.doAnalysis(Kapt3Extension.kt:130)
+	at org.jetbrains.kotlin.cli.jvm.compiler.TopDownAnalyzerFacadeForJVM.analyzeFilesWithJavaIntegration(TopDownAnalyzerFacadeForJVM.kt:112)
+	at org.jetbrains.kotlin.cli.jvm.compiler.TopDownAnalyzerFacadeForJVM.analyzeFilesWithJavaIntegration$default(TopDownAnalyzerFacadeForJVM.kt:75)
+	at org.jetbrains.kotlin.cli.jvm.compiler.KotlinToJVMBytecodeCompiler.analyze$lambda$12(KotlinToJVMBytecodeCompiler.kt:373)
+	at org.jetbrains.kotlin.cli.common.messages.AnalyzerWithCompilerReport.analyzeAndReport(AnalyzerWithCompilerReport.kt:115)
+	at org.jetbrains.kotlin.cli.jvm.compiler.KotlinToJVMBytecodeCompiler.analyze(KotlinToJVMBytecodeCompiler.kt:364)
+	at org.jetbrains.kotlin.cli.jvm.compiler.KotlinToJVMBytecodeCompiler.runFrontendAndGenerateIrUsingClassicFrontend(KotlinToJVMBytecodeCompiler.kt:195)
+	at org.jetbrains.kotlin.cli.jvm.compiler.KotlinToJVMBytecodeCompiler.compileModules$cli(KotlinToJVMBytecodeCompiler.kt:106)
+	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecute(K2JVMCompiler.kt:176)
+	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecute(K2JVMCompiler.kt:50)
+	at org.jetbrains.kotlin.cli.common.CLICompiler.execImpl(CLICompiler.kt:104)
+	at org.jetbrains.kotlin.cli.common.CLICompiler.execImpl(CLICompiler.kt:48)
+	at org.jetbrains.kotlin.cli.common.CLITool.exec(CLITool.kt:101)
+	at org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunner.runCompiler(IncrementalJvmCompilerRunner.kt:453)
+	at org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunner.runCompiler(IncrementalJvmCompilerRunner.kt:62)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.doCompile(IncrementalCompilerRunner.kt:506)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compileImpl(IncrementalCompilerRunner.kt:423)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.tryCompileIncrementally$lambda$9$compile(IncrementalCompilerRunner.kt:249)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.tryCompileIncrementally(IncrementalCompilerRunner.kt:267)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compile(IncrementalCompilerRunner.kt:120)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.execIncrementalCompiler(CompileServiceImpl.kt:676)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.access$execIncrementalCompiler(CompileServiceImpl.kt:92)
+	at org.jetbrains.kotlin.daemon.CompileServiceImpl.compile(CompileServiceImpl.kt:1661)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source)
+	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+	at java.rmi/sun.rmi.server.UnicastServerRef.dispatch(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Unknown Source)
+	at java.base/java.security.AccessController.doPrivileged(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport.serviceCall(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport.handleMessages(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.lambda$run$0(Unknown Source)
+	at java.base/java.security.AccessController.doPrivileged(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+Caused by: java.lang.IllegalStateException: Could not read file: /Users/lihlendlovu@glucode.com/AndroidStudioProjects/PersonaPulse/app/build/tmp/kapt3/incrementalData/debug/com/PersonaPulse/personapulse/repository/TodoRepository.class; size in bytes: 0; file type: CLASS
+	at org.jetbrains.kotlin.load.kotlin.VirtualFileKotlinClass$Factory.logFileReadingErrorMessage(VirtualFileKotlinClass.kt:77)
+	at org.jetbrains.kotlin.load.kotlin.VirtualFileKotlinClass$Factory.access$logFileReadingErrorMessage(VirtualFileKotlinClass.kt:46)
+	at org.jetbrains.kotlin.load.kotlin.VirtualFileKotlinClass.getFileContents(VirtualFileKotlinClass.kt:38)
+	at org.jetbrains.kotlin.load.kotlin.FileBasedKotlinClass.loadClassAnnotations(FileBasedKotlinClass.java:138)
+	at org.jetbrains.kotlin.load.kotlin.AbstractBinaryClassAnnotationLoader.loadClassAnnotations(AbstractBinaryClassAnnotationLoader.kt:61)
+	at org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedClassDescriptor.annotations$lambda$5(DeserializedClassDescriptor.kt:98)
+	at org.jetbrains.kotlin.storage.LockBasedStorageManager$LockBasedLazyValue.invoke(LockBasedStorageManager.java:408)
+	at org.jetbrains.kotlin.storage.LockBasedStorageManager$LockBasedNotNullLazyValue.invoke(LockBasedStorageManager.java:527)
+	at org.jetbrains.kotlin.storage.StorageKt.getValue(storage.kt:42)
+	at org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedAnnotations.getAnnotations(DeserializedAnnotations.kt:28)
+	at org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedAnnotations.iterator(DeserializedAnnotations.kt:32)
+	at org.jetbrains.kotlin.descriptors.annotations.Annotations$DefaultImpls.findAnnotation(Annotations.kt:124)
+	at org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedAnnotations.findAnnotation(DeserializedAnnotations.kt:24)
+	at org.jetbrains.kotlin.resolve.SinceKotlinUtilKt.getOwnSinceKotlinVersion$consider(sinceKotlinUtil.kt:75)
+	at org.jetbrains.kotlin.resolve.SinceKotlinUtilKt.getOwnSinceKotlinVersion(sinceKotlinUtil.kt:87)
+	at org.jetbrains.kotlin.resolve.SinceKotlinUtilKt.checkSinceKotlinVersionAccessibility(sinceKotlinUtil.kt:34)
+	at org.jetbrains.kotlin.resolve.deprecation.DeprecationResolver.isHiddenBecauseOfKotlinVersionAccessibility$lambda$3(DeprecationResolver.kt:117)
+	at org.jetbrains.kotlin.storage.LockBasedStorageManager$MapBasedMemoizedFunction.invoke(LockBasedStorageManager.java:578)
+	at org.jetbrains.kotlin.storage.LockBasedStorageManager$MapBasedMemoizedFunctionToNotNull.invoke(LockBasedStorageManager.java:681)
+	at org.jetbrains.kotlin.resolve.deprecation.DeprecationResolver.isHiddenInResolution(DeprecationResolver.kt:159)
+	at org.jetbrains.kotlin.resolve.deprecation.DeprecationResolver.isHiddenInResolution(DeprecationResolver.kt:145)
+	at org.jetbrains.kotlin.resolve.deprecation.DeprecationResolver.isHiddenInResolution$default(DeprecationResolver.kt:137)
+	at org.jetbrains.kotlin.resolve.calls.tower.KotlinResolutionStatelessCallbacksImpl.isHiddenInResolution(KotlinResolutionStatelessCallbacksImpl.kt:66)
+	at org.jetbrains.kotlin.resolve.calls.model.SimpleCandidateFactory.createCandidate(SimpleCandidateFactory.kt:158)
+	at org.jetbrains.kotlin.resolve.calls.model.SimpleCandidateFactory.createCandidate(SimpleCandidateFactory.kt:110)
+	at org.jetbrains.kotlin.resolve.calls.model.SimpleCandidateFactory.createCandidate(SimpleCandidateFactory.kt:29)
+	at org.jetbrains.kotlin.resolve.calls.tower.AbstractSimpleScopeTowerProcessor.createCandidates(ScopeTowerProcessors.kt:124)
+	at org.jetbrains.kotlin.resolve.calls.tower.NoExplicitReceiverScopeTowerProcessor.simpleProcess(ScopeTowerProcessors.kt:195)
+	at org.jetbrains.kotlin.resolve.calls.tower.SimpleScopeTowerProcessor.process(ScopeTowerProcessors.kt:109)
+	at org.jetbrains.kotlin.resolve.calls.tower.PrioritizedCompositeScopeTowerProcessor.process(ScopeTowerProcessors.kt:41)
+	at org.jetbrains.kotlin.resolve.calls.tower.TowerResolver.processTowerData(TowerResolver.kt:383)
+	at org.jetbrains.kotlin.resolve.calls.tower.TowerResolver.access$processTowerData(TowerResolver.kt:95)
+	at org.jetbrains.kotlin.resolve.calls.tower.TowerResolver$Task.process(TowerResolver.kt:207)
+	at org.jetbrains.kotlin.resolve.calls.tower.TowerResolver$Task.process(TowerResolver.kt:216)
+	at org.jetbrains.kotlin.resolve.calls.tower.TowerResolver$Task.run$processImportingScope(TowerResolver.kt)
+	at org.jetbrains.kotlin.resolve.calls.tower.TowerResolver$Task.run$processScopes(TowerResolver.kt:282)
+	at org.jetbrains.kotlin.resolve.calls.tower.TowerResolver$Task.run(TowerResolver.kt:305)
+	at org.jetbrains.kotlin.resolve.calls.tower.TowerResolver.run(TowerResolver.kt:114)
+	at org.jetbrains.kotlin.resolve.calls.tower.TowerResolver.runResolve(TowerResolver.kt:101)
+	at org.jetbrains.kotlin.resolve.calls.KotlinCallResolver.resolveCall(KotlinCallResolver.kt:184)
+	at org.jetbrains.kotlin.resolve.calls.KotlinCallResolver.resolveAndCompleteCall(KotlinCallResolver.kt:41)
+	at org.jetbrains.kotlin.resolve.calls.tower.PSICallResolver.runResolutionAndInference(PSICallResolver.kt:114)
+	at org.jetbrains.kotlin.resolve.calls.CallResolver.doResolveCallOrGetCachedResults(CallResolver.java:602)
+	at org.jetbrains.kotlin.resolve.calls.CallResolver.lambda$computeTasksAndResolveCall$0(CallResolver.java:213)
+	at org.jetbrains.kotlin.util.PerformanceCounter.time(PerformanceCounter.kt:90)
+	at org.jetbrains.kotlin.resolve.calls.CallResolver.computeTasksAndResolveCall(CallResolver.java:211)
+	at org.jetbrains.kotlin.resolve.calls.CallResolver.computeTasksAndResolveCall(CallResolver.java:199)
+	at org.jetbrains.kotlin.resolve.calls.CallResolver.resolveFunctionCall(CallResolver.java:329)
+	at org.jetbrains.kotlin.resolve.calls.CallExpressionResolver.getResolvedCallForFunction(CallExpressionResolver.kt:86)
+	at org.jetbrains.kotlin.resolve.calls.CallExpressionResolver.getCallExpressionTypeInfoWithoutFinalTypeCheck(CallExpressionResolver.kt:208)
+	at org.jetbrains.kotlin.resolve.calls.CallExpressionResolver.getCallExpressionTypeInfo(CallExpressionResolver.kt:185)
+	at org.jetbrains.kotlin.types.expressions.BasicExpressionTypingVisitor.visitCallExpression(BasicExpressionTypingVisitor.java:731)
+	at org.jetbrains.kotlin.types.expressions.ExpressionTypingVisitorDispatcher.visitCallExpression(ExpressionTypingVisitorDispatcher.java:396)
+	at org.jetbrains.kotlin.types.expressions.ExpressionTypingVisitorDispatcher$ForDeclarations.visitCallExpression(ExpressionTypingVisitorDispatcher.java:47)
+	at org.jetbrains.kotlin.psi.KtCallExpression.accept(KtCallExpression.java:35)
+	at org.jetbrains.kotlin.types.expressions.ExpressionTypingVisitorDispatcher.lambda$getTypeInfo$0(ExpressionTypingVisitorDispatcher.java:176)
+	... 68 more
+Caused by: java.io.FileNotFoundException: /Users/lihlendlovu@glucode.com/AndroidStudioProjects/PersonaPulse/app/build/tmp/kapt3/incrementalData/debug/com/PersonaPulse/personapulse/repository/TodoRepository.class (No such file or directory)
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(Unknown Source)
+	at java.base/java.io.FileInputStream.<init>(Unknown Source)
+	at org.jetbrains.kotlin.com.intellij.openapi.util.io.FileUtil.loadFileBytes(FileUtil.java:204)
+	at org.jetbrains.kotlin.com.intellij.openapi.vfs.local.CoreLocalVirtualFile.contentsToByteArray(CoreLocalVirtualFile.java:98)
+	at org.jetbrains.kotlin.load.kotlin.VirtualFileKotlinClass.getFileContents(VirtualFileKotlinClass.kt:36)
+	... 121 more
+
+
+error message: Daemon compilation failed: null
+java.lang.Exception
+	at org.jetbrains.kotlin.daemon.common.CompileService$CallResult$Error.get(CompileService.kt:69)
+	at org.jetbrains.kotlin.daemon.common.CompileService$CallResult$Error.get(CompileService.kt:65)
+	at org.jetbrains.kotlin.compilerRunner.GradleKotlinCompilerWork.compileWithDaemon(GradleKotlinCompilerWork.kt:240)
+	at org.jetbrains.kotlin.compilerRunner.GradleKotlinCompilerWork.compileWithDaemonOrFallbackImpl(GradleKotlinCompilerWork.kt:159)
+	at org.jetbrains.kotlin.compilerRunner.GradleKotlinCompilerWork.run(GradleKotlinCompilerWork.kt:111)
+	at org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction.execute(GradleCompilerRunnerWithWorkers.kt:76)
+	at org.gradle.workers.internal.DefaultWorkerServer.execute(DefaultWorkerServer.java:63)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:66)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:62)
+	at org.gradle.internal.classloader.ClassLoaderUtils.executeInClassloader(ClassLoaderUtils.java:100)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.lambda$execute$0(NoIsolationWorkerFactory.java:62)
+	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:44)
+	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:41)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:209)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:204)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:53)
+	at org.gradle.workers.internal.AbstractWorker.executeWrappedInBuildOperation(AbstractWorker.java:41)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.execute(NoIsolationWorkerFactory.java:59)
+	at org.gradle.workers.internal.DefaultWorkerExecutor.lambda$submitWork$0(DefaultWorkerExecutor.java:174)
+	at java.base/java.util.concurrent.FutureTask.run(Unknown Source)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runExecution(DefaultConditionalExecutionQueue.java:194)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.access$700(DefaultConditionalExecutionQueue.java:127)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner$1.run(DefaultConditionalExecutionQueue.java:169)
+	at org.gradle.internal.Factories$1.create(Factories.java:31)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.withLocks(DefaultWorkerLeaseService.java:263)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:127)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:132)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runBatch(DefaultConditionalExecutionQueue.java:164)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.run(DefaultConditionalExecutionQueue.java:133)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Unknown Source)
+	at java.base/java.util.concurrent.FutureTask.run(Unknown Source)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+Caused by: java.nio.file.NoSuchFileException: /var/folders/zl/p535nfyx2gdfpz1p773l0_540000gp/T/kotlin-backups1528474868011961616/1.backup -> /Users/lihlendlovu@glucode.com/AndroidStudioProjects/PersonaPulse/app/build/tmp/kapt3/stubs/debug/com/PersonaPulse/personapulse/ui/screens/AnalyticsScreenKt.kapt_metadata
+	at java.base/sun.nio.fs.UnixException.translateToIOException(Unknown Source)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(Unknown Source)
+	at java.base/sun.nio.fs.UnixFileSystem.move(Unknown Source)
+	at java.base/sun.nio.fs.UnixFileSystemProvider.move(Unknown Source)
+	at java.base/java.nio.file.Files.move(Unknown Source)
+	at org.jetbrains.kotlin.incremental.RecoverableCompilationTransaction.revertChanges(CompilationTransaction.kt:231)
+	at org.jetbrains.kotlin.incremental.RecoverableCompilationTransaction.close(CompilationTransaction.kt:256)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.tryCompileIncrementally(IncrementalCompilerRunner.kt:747)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compile(IncrementalCompilerRunner.kt:120)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.execIncrementalCompiler(CompileServiceImpl.kt:676)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.access$execIncrementalCompiler(CompileServiceImpl.kt:92)
+	at org.jetbrains.kotlin.daemon.CompileServiceImpl.compile(CompileServiceImpl.kt:1661)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source)
+	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+	at java.rmi/sun.rmi.server.UnicastServerRef.dispatch(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Unknown Source)
+	at java.base/java.security.AccessController.doPrivileged(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport.serviceCall(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport.handleMessages(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.lambda$run$0(Unknown Source)
+	at java.base/java.security.AccessController.doPrivileged(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(Unknown Source)
+	... 3 more
+
+
