@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "173097321139",
+    "project_id": "personapulse-ccc26",
+    "storage_bucket": "personapulse-ccc26.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:173097321139:android:25c1f61aa230260624e6c6",
+        "android_client_info": {
+          "package_name": "Persona.Pulse_1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqGFbIkz3UZdEVdRSa_GXbOtuBGhpTSo4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
