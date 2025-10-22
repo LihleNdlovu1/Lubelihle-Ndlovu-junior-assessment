@@ -46,7 +46,7 @@ fun BottomNavigationBar(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 17.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF2C2C2E)),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF1C1C1C)),
         shape = RoundedCornerShape(34.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 12.dp)
     ) {
@@ -117,14 +117,14 @@ private fun NavItem(
         label = "background"
     )
     
-    val iconColor = if (isActive) Color.White else Color(0xFF8E8E93)
+    val iconColor = if (isActive) Color(0xFFCDDC39) else Color(0xFF8E8E93)
     
     Box(
         modifier = Modifier
             .size(44.dp)
             .clip(CircleShape)
             .background(
-                Color.White.copy(alpha = backgroundColor)
+                Color(0xFFCDDC39).copy(alpha = backgroundColor)
             )
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -148,7 +148,7 @@ private fun NavItem(
                     .padding(bottom = 2.dp)
                     .size(width = 24.dp, height = 2.dp)
                     .background(
-                        Color.White,
+                        Color(0xFFCDDC39),
                         RoundedCornerShape(1.dp)
                     )
             )
@@ -184,7 +184,7 @@ private fun CentralAddButton(
         modifier = Modifier
             .size(52.dp)
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.White)
+            .background(Color(0xFFCDDC39))
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
@@ -195,7 +195,7 @@ private fun CentralAddButton(
         Icon(
             imageVector = Icons.Default.Add,
             contentDescription = "Add Task",
-            tint = Color(0xFF1D1D1F),
+            tint = Color(0xFF000000),
             modifier = Modifier.size(24.dp)
         )
     }

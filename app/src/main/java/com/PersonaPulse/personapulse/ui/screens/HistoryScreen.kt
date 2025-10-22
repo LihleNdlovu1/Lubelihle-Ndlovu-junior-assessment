@@ -19,12 +19,21 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -32,6 +41,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,7 +51,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.PersonaPulse.personapulse.model.Priority
 import com.PersonaPulse.personapulse.model.TodoData
@@ -52,11 +64,26 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(navController: NavController) {
-    val viewModel: HistoryViewModel = viewModel()
+    val viewModel: HistoryViewModel = hiltViewModel()
     val todos by viewModel.todos.collectAsState()
     
-    // Filter completed tasks
-    val completedTasks = todos.filter { it.isCompleted }
+    // Search and filter state
+    var searchQuery by remember { mutableStateOf("") }
+    var showFilterMenu by remember { mutableStateOf(false) }
+    var selectedPriorityFilter by remember { mutableStateOf<Priority?>(null) }
+    
+    // Filter completed tasks with search and priority filter
+    val completedTasks = todos.filter { todo ->
+        val isCompleted = todo.isCompleted
+        
+        val matchesSearch = searchQuery.isEmpty() || 
+            todo.title.contains(searchQuery, ignoreCase = true) ||
+            (todo.description?.contains(searchQuery, ignoreCase = true) == true)
+        
+        val matchesPriority = selectedPriorityFilter == null || todo.priority == selectedPriorityFilter
+        
+        isCompleted && matchesSearch && matchesPriority
+    }
     
     Scaffold(
         topBar = {
@@ -86,30 +113,144 @@ fun HistoryScreen(navController: NavController) {
         containerColor = Color.Black
     ) { padding ->
         Box(modifier = Modifier.fillMaxSize()) {
-            if (completedTasks.isEmpty()) {
-                EmptyHistoryState()
-            } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding)
-                        .padding(16.dp)
-                        .padding(bottom = 80.dp), // Add space for bottom navigation
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    item {
-                        // Header with count
-                        Text(
-                            text = "Completed Tasks (${completedTasks.size})",
-                            color = Color.White,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(16.dp)
+                    .padding(bottom = 80.dp), // Add space for bottom navigation
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                item {
+                    // Search and Filter Bar
+                    Column {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            // Search Field
+                            OutlinedTextField(
+                                value = searchQuery,
+                                onValueChange = { searchQuery = it },
+                                modifier = Modifier.weight(1f),
+                                placeholder = { Text("Search history...", color = Color.Gray) },
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Default.Search,
+                                        contentDescription = "Search",
+                                        tint = Color(0xFFCDDC39)
+                                    )
+                                },
+                                trailingIcon = {
+                                    if (searchQuery.isNotEmpty()) {
+                                        IconButton(onClick = { searchQuery = "" }) {
+                                            Icon(
+                                                Icons.Default.Close,
+                                                contentDescription = "Clear",
+                                                tint = Color.White
+                                            )
+                                        }
+                                    }
+                                },
+                                singleLine = true,
+                                shape = RoundedCornerShape(12.dp),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = Color(0xFFCDDC39),
+                                    unfocusedBorderColor = Color.Gray,
+                                    focusedTextColor = Color.White,
+                                    unfocusedTextColor = Color.White,
+                                    cursorColor = Color(0xFFCDDC39)
+                                )
+                            )
+                            
+                            // Filter Button
+                            Box {
+                                IconButton(
+                                    onClick = { showFilterMenu = true },
+                                    modifier = Modifier.padding(top = 8.dp)
+                                ) {
+                                    Icon(
+                                        Icons.Default.FilterList,
+                                        contentDescription = "Filter",
+                                        tint = if (selectedPriorityFilter != null) Color(0xFFCDDC39) else Color.White
+                                    )
+                                }
+                                
+                                DropdownMenu(
+                                    expanded = showFilterMenu,
+                                    onDismissRequest = { showFilterMenu = false }
+                                ) {
+                                    DropdownMenuItem(
+                                        text = { Text("All Priorities") },
+                                        onClick = {
+                                            selectedPriorityFilter = null
+                                            showFilterMenu = false
+                                        }
+                                    )
+                                    DropdownMenuItem(
+                                        text = { Text("High Priority") },
+                                        onClick = {
+                                            selectedPriorityFilter = Priority.HIGH
+                                            showFilterMenu = false
+                                        }
+                                    )
+                                    DropdownMenuItem(
+                                        text = { Text("Medium Priority") },
+                                        onClick = {
+                                            selectedPriorityFilter = Priority.MEDIUM
+                                            showFilterMenu = false
+                                        }
+                                    )
+                                    DropdownMenuItem(
+                                        text = { Text("Low Priority") },
+                                        onClick = {
+                                            selectedPriorityFilter = Priority.LOW
+                                            showFilterMenu = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                        
+                        // Active filter indicator
+                        if (selectedPriorityFilter != null) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Start
+                            ) {
+                                Text(
+                                    text = "Filtered by: ${selectedPriorityFilter?.name}",
+                                    color = Color(0xFFCDDC39),
+                                    style = androidx.compose.material3.MaterialTheme.typography.labelSmall
+                                )
+                            }
+                        }
                     }
+                }
+                
+                item {
+                    // Header with count
+                    Text(
+                        text = "Completed Tasks (${completedTasks.size})",
+                        color = Color.White,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                }
+                
+                if (completedTasks.isEmpty()) {
+                    item {
+                        EmptyHistoryState()
+                    }
+                } else {
                     
                     items(completedTasks) { task ->
-                        CompletedTaskCard(task = task)
+                        CompletedTaskCard(
+                            task = task,
+                            onToggle = { viewModel.toggleTodo(task) }
+                        )
                     }
                 }
             }
@@ -142,6 +283,7 @@ fun HistoryScreen(navController: NavController) {
 @Composable
 fun CompletedTaskCard(
     task: TodoData,
+    onToggle: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val priorityColors = when (task.priority) {
@@ -156,7 +298,7 @@ fun CompletedTaskCard(
     
     Card(
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A)),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF1C1C1C)),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
@@ -166,12 +308,15 @@ fun CompletedTaskCard(
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Completed icon
-            Icon(
-                Icons.Default.CheckCircle,
-                contentDescription = "Completed",
-                tint = Color(0xFF4CAF50),
-                modifier = Modifier.size(24.dp)
+            // Checkbox to untick and move back to ongoing
+            Checkbox(
+                checked = task.isCompleted,
+                onCheckedChange = { onToggle() },
+                colors = CheckboxDefaults.colors(
+                    checkedColor = Color(0xFF4CAF50),
+                    uncheckedColor = Color(0xFFBDBDBD),
+                    checkmarkColor = Color.White
+                )
             )
             
             Spacer(modifier = Modifier.width(12.dp))

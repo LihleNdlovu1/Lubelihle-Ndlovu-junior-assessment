@@ -1,14 +1,19 @@
 package com.PersonaPulse.personapulse.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import com.PersonaPulse.personapulse.model.TodoData
+import com.PersonaPulse.personapulse.repository.TodoRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlin.math.roundToInt
+import java.util.Calendar
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 data class PerformanceStats(
     val completedTasks: Int,
@@ -26,7 +31,10 @@ data class ProductivityInsights(
     val improvementSuggestions: List<String>
 )
 
-class AnalyticsViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class AnalyticsViewModel @Inject constructor(
+    private val todoRepository: TodoRepository
+) : ViewModel() {
     
     private val _performanceStats = MutableStateFlow<PerformanceStats?>(null)
     val performanceStats: StateFlow<PerformanceStats?> = _performanceStats.asStateFlow()
@@ -37,58 +45,15 @@ class AnalyticsViewModel(application: Application) : AndroidViewModel(applicatio
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
     
-    // Mock data for now - in a real app, this would come from a repository
     private val _allTodos = MutableStateFlow<List<TodoData>>(emptyList())
     val allTodos: StateFlow<List<TodoData>> = _allTodos.asStateFlow()
     
     init {
-        loadMockData()
-        loadAnalytics()
-    }
-    
-    private fun loadMockData() {
         viewModelScope.launch {
-            val mockTodos = listOf(
-                TodoData(
-                    title = "Complete project proposal",
-                    description = "Draft and review the Q4 project proposal",
-                    priority = com.PersonaPulse.personapulse.model.Priority.HIGH,
-                    category = "Work",
-                    isCompleted = true,
-                    completedAt = System.currentTimeMillis() - 86400000 // 1 day ago
-                ),
-                TodoData(
-                    title = "Grocery shopping",
-                    description = "Buy ingredients for weekend cooking",
-                    priority = com.PersonaPulse.personapulse.model.Priority.MEDIUM,
-                    category = "Personal",
-                    isCompleted = true,
-                    completedAt = System.currentTimeMillis() - 172800000 // 2 days ago
-                ),
-                TodoData(
-                    title = "Call dentist",
-                    description = "Schedule annual checkup",
-                    priority = com.PersonaPulse.personapulse.model.Priority.LOW,
-                    category = "Health",
-                    isCompleted = false
-                ),
-                TodoData(
-                    title = "Read technical documentation",
-                    description = "Study new framework documentation",
-                    priority = com.PersonaPulse.personapulse.model.Priority.HIGH,
-                    category = "Learning",
-                    isCompleted = true,
-                    completedAt = System.currentTimeMillis() - 259200000 // 3 days ago
-                ),
-                TodoData(
-                    title = "Exercise routine",
-                    description = "Complete 30-minute workout",
-                    priority = com.PersonaPulse.personapulse.model.Priority.MEDIUM,
-                    category = "Health",
-                    isCompleted = false
-                )
-            )
-            _allTodos.value = mockTodos
+            todoRepository.getAllTodos().collect { list ->
+                _allTodos.value = list
+                loadAnalytics()
+            }
         }
     }
     
@@ -160,15 +125,63 @@ class AnalyticsViewModel(application: Application) : AndroidViewModel(applicatio
         todos: List<TodoData>, 
         stats: PerformanceStats
     ): ProductivityInsights {
-        val completedTodos = todos.filter { it.isCompleted }
+        val completedTodos = todos.filter { it.isCompleted && it.completedAt != null }
         
-        // Mock insights - in a real app, this would analyze actual data patterns
-        val mostProductiveDay = "Tuesday"
-        val mostProductiveTime = "10:00 AM - 12:00 PM"
+        // Calculate most productive day from actual completion data
+        val mostProductiveDay = if (completedTodos.isNotEmpty()) {
+            val dayOfWeekCounts = completedTodos.groupBy { todo ->
+                val calendar = Calendar.getInstance()
+                calendar.timeInMillis = todo.completedAt!!
+                calendar.get(Calendar.DAY_OF_WEEK)
+            }.mapValues { it.value.size }
+            
+            val mostProductiveDayNum = dayOfWeekCounts.maxByOrNull { it.value }?.key
+            when (mostProductiveDayNum) {
+                Calendar.SUNDAY -> "Sunday"
+                Calendar.MONDAY -> "Monday"
+                Calendar.TUESDAY -> "Tuesday"
+                Calendar.WEDNESDAY -> "Wednesday"
+                Calendar.THURSDAY -> "Thursday"
+                Calendar.FRIDAY -> "Friday"
+                Calendar.SATURDAY -> "Saturday"
+                else -> "No data yet"
+            }
+        } else {
+            "No data yet"
+        }
         
-        val categoryCounts = completedTodos.groupBy { it.category ?: "Uncategorized" }
+        // Calculate most productive time from actual completion data
+        val mostProductiveTime = if (completedTodos.isNotEmpty()) {
+            val hourCounts = completedTodos.groupBy { todo ->
+                val calendar = Calendar.getInstance()
+                calendar.timeInMillis = todo.completedAt!!
+                calendar.get(Calendar.HOUR_OF_DAY)
+            }.mapValues { it.value.size }
+            
+            val mostProductiveHour = hourCounts.maxByOrNull { it.value }?.key
+            if (mostProductiveHour != null) {
+                val startHour = mostProductiveHour
+                val endHour = (mostProductiveHour + 2) % 24
+                val startPeriod = if (startHour < 12) "AM" else "PM"
+                val endPeriod = if (endHour < 12) "AM" else "PM"
+                val startHour12 = if (startHour == 0) 12 else if (startHour > 12) startHour - 12 else startHour
+                val endHour12 = if (endHour == 0) 12 else if (endHour > 12) endHour - 12 else endHour
+                "$startHour12:00 $startPeriod - $endHour12:00 $endPeriod"
+            } else {
+                "No data yet"
+            }
+        } else {
+            "No data yet"
+        }
+        
+        // Calculate top category from actual data
+        val categoryCounts = completedTodos.groupBy { it.category ?: "General" }
             .mapValues { it.value.size }
-        val topCategory = categoryCounts.maxByOrNull { it.value }?.key ?: "Work"
+        val topCategory = if (categoryCounts.isNotEmpty()) {
+            categoryCounts.maxByOrNull { it.value }?.key ?: "General"
+        } else {
+            "No data yet"
+        }
         
         val suggestions = mutableListOf<String>()
         
@@ -199,3 +212,5 @@ class AnalyticsViewModel(application: Application) : AndroidViewModel(applicatio
         )
     }
 }
+
+

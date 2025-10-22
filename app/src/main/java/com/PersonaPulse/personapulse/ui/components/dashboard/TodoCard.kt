@@ -3,6 +3,7 @@ package com.PersonaPulse.personapulse.ui.components.dashboard
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,7 +17,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.CalendarToday
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.Flag
@@ -25,6 +28,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -32,6 +37,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -53,8 +61,10 @@ import java.util.Locale
 fun TodoCard(
     goal: TodoData,
     onToggle: () -> Unit,
-    onEdit: () -> Unit
+    onEdit: () -> Unit,
+    onDelete: () -> Unit = {}
 ) {
+    var showMenu by remember { mutableStateOf(false) }
     // Animation for completion state
     val completionAlpha by animateFloatAsState(
         targetValue = if (goal.isCompleted) 0.6f else 1f,
@@ -80,38 +90,29 @@ fun TodoCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = 16.dp, vertical = 12.dp)
+            .border(
+                width = 2.dp,
+                color = priorityColors[0],
+                shape = RoundedCornerShape(20.dp)
+            )
             .alpha(completionAlpha),
         elevation = CardDefaults.cardElevation(
             defaultElevation = if (goal.isCompleted) 2.dp else 8.dp
         ),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (goal.isCompleted)
-                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
-            else Color.White
+            containerColor = Color(0xFF2C2C2C)
         )
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
 
-            // Header with priority indicator and actions
+            // Header with 3-dot menu
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Top
             ) {
-                // Priority indicator
-                Box(
-                    modifier = Modifier
-                        .size(12.dp)
-                        .clip(CircleShape)
-                        .background(
-                            brush = Brush.horizontalGradient(priorityColors)
-                        )
-                        .align(Alignment.Top)
-                )
-
-                Spacer(modifier = Modifier.width(12.dp))
 
                 // Title
                 Text(
@@ -121,38 +122,69 @@ fun TodoCard(
                         fontSize = 18.sp
                     ),
                     color = if (goal.isCompleted)
-                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                    else MaterialTheme.colorScheme.onSurface,
+                        Color.White.copy(alpha = 0.6f)
+                    else Color.White,
                     textDecoration = if (goal.isCompleted) TextDecoration.LineThrough else null,
                     modifier = Modifier.weight(1f)
                 )
 
-                // Actions
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                // 3-dot menu in top right corner
+                Box {
                     IconButton(
-                        onClick = onEdit,
-                        colors = IconButtonDefaults.iconButtonColors(
-                            contentColor = Color(0xFF6C5CE7)
-                        ),
+                        onClick = { showMenu = true },
                         modifier = Modifier.size(36.dp)
                     ) {
                         Icon(
-                            Icons.Default.Edit,
-                            contentDescription = "Edit",
-                            modifier = Modifier.size(18.dp)
+                            Icons.Default.MoreVert,
+                            contentDescription = "More options",
+                            tint = Color.White,
+                            modifier = Modifier.size(20.dp)
                         )
                     }
-
-                    Checkbox(
-                        checked = goal.isCompleted,
-                        onCheckedChange = { onToggle() },
-                        colors = CheckboxDefaults.colors(
-                            checkedColor = Color(0xFF4CAF50),
-                            uncheckedColor = Color(0xFFBDBDBD),
-                            checkmarkColor = Color.White
-                        ),
-                        modifier = Modifier.scale(checkboxScale)
-                    )
+                    
+                    DropdownMenu(
+                        expanded = showMenu,
+                        onDismissRequest = { showMenu = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Icon(
+                                        Icons.Default.Edit,
+                                        contentDescription = "Edit",
+                                        tint = Color(0xFF4CAF50)
+                                    )
+                                    Text("Edit")
+                                }
+                            },
+                            onClick = {
+                                showMenu = false
+                                onEdit()
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Icon(
+                                        Icons.Default.Delete,
+                                        contentDescription = "Delete",
+                                        tint = Color(0xFFFF4444)
+                                    )
+                                    Text("Delete")
+                                }
+                            },
+                            onClick = {
+                                showMenu = false
+                                onDelete()
+                            }
+                        )
+                    }
                 }
             }
 
@@ -162,7 +194,7 @@ fun TodoCard(
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                    color = Color.White.copy(alpha = 0.7f),
                     lineHeight = 20.sp
                 )
             }
@@ -194,32 +226,72 @@ fun TodoCard(
                 }
             }
 
-            // Date information
+            // Date information with checkbox
             val hasDateInfo = goal.dueDate != null || goal.reminderTime != null
             if (hasDateInfo) {
                 Spacer(modifier = Modifier.height(12.dp))
 
-                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    // Due date
-                    goal.dueDate?.let { dueDate ->
-                        DateInfoRow(
-                            icon = Icons.Outlined.CalendarToday,
-                            label = "Due",
-                            date = dueDate,
-                            color = if (isOverdue(dueDate)) Color(0xFFFF6B6B) else Color(0xFF6C5CE7)
-                        )
-                    }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        // Due date
+                        goal.dueDate?.let { dueDate ->
+                            DateInfoRow(
+                                icon = Icons.Outlined.CalendarToday,
+                                label = "Due",
+                                date = dueDate,
+                                color = if (isOverdue(dueDate)) Color(0xFFFF6B6B) else Color(0xFF6C5CE7)
+                            )
+                        }
 
-                    // Reminder
-                    goal.reminderTime?.let { reminderTime ->
-                        DateInfoRow(
-                            icon = Icons.Outlined.Notifications,
-                            label = "Reminder",
-                            date = reminderTime,
-                            color = Color(0xFF4CAF50),
-                            includeTime = true
-                        )
+                        // Reminder
+                        goal.reminderTime?.let { reminderTime ->
+                            DateInfoRow(
+                                icon = Icons.Outlined.Notifications,
+                                label = "Reminder",
+                                date = reminderTime,
+                                color = Color(0xFF4CAF50),
+                                includeTime = true
+                            )
+                        }
                     }
+                    
+                    // Checkbox aligned with dates
+                    Checkbox(
+                        checked = goal.isCompleted,
+                        onCheckedChange = { onToggle() },
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = Color(0xFF4CAF50),
+                            uncheckedColor = Color(0xFFBDBDBD),
+                            checkmarkColor = Color.White
+                        ),
+                        modifier = Modifier.scale(checkboxScale)
+                    )
+                }
+            } else {
+                // If no date info, show checkbox at bottom
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Checkbox(
+                        checked = goal.isCompleted,
+                        onCheckedChange = { onToggle() },
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = Color(0xFF4CAF50),
+                            uncheckedColor = Color(0xFFBDBDBD),
+                            checkmarkColor = Color.White
+                        ),
+                        modifier = Modifier.scale(checkboxScale)
+                    )
                 }
             }
         }

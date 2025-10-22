@@ -1,15 +1,20 @@
 package com.PersonaPulse.personapulse.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.PersonaPulse.personapulse.model.TodoData
+import com.PersonaPulse.personapulse.repository.TodoRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ProfileViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class ProfileViewModel @Inject constructor(
+    private val todoRepository: TodoRepository
+) : ViewModel() {
     
     private val _userProfile = MutableStateFlow<UserProfile?>(null)
     val userProfile: StateFlow<UserProfile?> = _userProfile.asStateFlow()
@@ -24,66 +29,29 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     val userStats: StateFlow<UserStats?> = _userStats.asStateFlow()
     
     init {
-        loadMockData()
-    }
-    
-    private fun loadMockData() {
         viewModelScope.launch {
             _isLoading.value = true
-            
-            // Mock user profile
-            val mockProfile = UserProfile(
-                id = "user_123",
-                name = "John Doe",
-                email = "john.doe@example.com",
+            // In lieu of a real user profile source, keep a minimal default
+            _userProfile.value = UserProfile(
+                id = "local_user",
+                name = "",
+                email = "",
                 avatarUrl = null,
-                joinDate = System.currentTimeMillis() - 86400000 * 30, // 30 days ago
+                joinDate = System.currentTimeMillis(),
                 preferences = UserPreferences(
-                    theme = "Dark",
+                    theme = "System",
                     notifications = true,
                     language = "English"
                 )
             )
-            
-            // Mock todo data for stats calculation
-            val mockTodos = listOf(
-                TodoData(
-                    title = "Complete project proposal",
-                    description = "Draft and review the Q4 project proposal",
-                    priority = com.PersonaPulse.personapulse.model.Priority.HIGH,
-                    category = "Work",
-                    isCompleted = true,
-                    completedAt = System.currentTimeMillis() - 86400000 * 2
-                ),
-                TodoData(
-                    title = "Grocery shopping",
-                    description = "Buy ingredients for weekend cooking",
-                    priority = com.PersonaPulse.personapulse.model.Priority.MEDIUM,
-                    category = "Personal",
-                    isCompleted = true,
-                    completedAt = System.currentTimeMillis() - 86400000
-                ),
-                TodoData(
-                    title = "Call dentist",
-                    description = "Schedule annual checkup",
-                    priority = com.PersonaPulse.personapulse.model.Priority.LOW,
-                    category = "Health",
-                    isCompleted = false
-                ),
-                TodoData(
-                    title = "Read book chapter",
-                    description = "Finish chapter 5 of 'Clean Code'",
-                    priority = com.PersonaPulse.personapulse.model.Priority.MEDIUM,
-                    category = "Learning",
-                    isCompleted = true,
-                    completedAt = System.currentTimeMillis() - 86400000 * 5
-                )
-            )
-            
-            _userProfile.value = mockProfile
-            _todos.value = mockTodos
-            calculateUserStats()
             _isLoading.value = false
+        }
+        // Observe todos from Room and update stats
+        viewModelScope.launch {
+            todoRepository.getAllTodos().collect { list ->
+                _todos.value = list
+                calculateUserStats()
+            }
         }
     }
     
@@ -160,3 +128,5 @@ data class UserStats(
     val streakDays: Int,
     val averageTasksPerDay: Float
 )
+
+

@@ -1,19 +1,23 @@
 package com.PersonaPulse.personapulse.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.PersonaPulse.personapulse.model.TodoData
+import com.PersonaPulse.personapulse.repository.TodoRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import javax.inject.Inject
 
-class NotificationViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class NotificationViewModel @Inject constructor(
+    private val todoRepository: TodoRepository
+) : ViewModel() {
     
-    private val _todos = MutableStateFlow<List<TodoData>>(emptyList())
-    val todos: StateFlow<List<TodoData>> = _todos.asStateFlow()
+    val todos = todoRepository.getAllTodos()
     
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
@@ -21,49 +25,18 @@ class NotificationViewModel(application: Application) : AndroidViewModel(applica
     private val _notifications = MutableStateFlow<List<NotificationItem>>(emptyList())
     val notifications: StateFlow<List<NotificationItem>> = _notifications.asStateFlow()
     
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
+    
     init {
-        loadMockData()
+        observeTodos()
     }
     
-    private fun loadMockData() {
+    private fun observeTodos() {
         viewModelScope.launch {
-            _isLoading.value = true
-            
-            // Mock todo data with due dates
-            val mockTodos = listOf(
-                TodoData(
-                    title = "Team meeting",
-                    description = "Weekly standup meeting",
-                    priority = com.PersonaPulse.personapulse.model.Priority.HIGH,
-                    category = "Work",
-                    dueDate = getTodayTimestamp() + 3600000 // 1 hour from now
-                ),
-                TodoData(
-                    title = "Doctor appointment",
-                    description = "Annual health checkup",
-                    priority = com.PersonaPulse.personapulse.model.Priority.MEDIUM,
-                    category = "Health",
-                    dueDate = getTodayTimestamp() + 7200000 // 2 hours from now
-                ),
-                TodoData(
-                    title = "Grocery shopping",
-                    description = "Buy ingredients for dinner",
-                    priority = com.PersonaPulse.personapulse.model.Priority.LOW,
-                    category = "Personal",
-                    dueDate = getTodayTimestamp() + 10800000 // 3 hours from now
-                ),
-                TodoData(
-                    title = "Project deadline",
-                    description = "Submit final project report",
-                    priority = com.PersonaPulse.personapulse.model.Priority.HIGH,
-                    category = "Work",
-                    dueDate = getTodayTimestamp() - 3600000 // 1 hour ago (overdue)
-                )
-            )
-            
-            _todos.value = mockTodos
-            generateNotifications()
-            _isLoading.value = false
+            todos.collect { todoList ->
+                generateNotifications(todoList)
+            }
         }
     }
     
@@ -76,11 +49,11 @@ class NotificationViewModel(application: Application) : AndroidViewModel(applica
         return calendar.timeInMillis
     }
     
-    private fun generateNotifications() {
+    private fun generateNotifications(todoList: List<TodoData>) {
         val notificationList = mutableListOf<NotificationItem>()
         
-        // Add notifications for due tasks
-        _todos.value.forEach { todo ->
+        // Add notifications for due tasks (only incomplete tasks)
+        todoList.filter { !it.isCompleted }.forEach { todo ->
             todo.dueDate?.let { dueDate ->
                 val now = System.currentTimeMillis()
                 val timeDiff = dueDate - now
@@ -141,30 +114,45 @@ class NotificationViewModel(application: Application) : AndroidViewModel(applica
     }
     
     fun refreshNotifications() {
-        generateNotifications()
+        viewModelScope.launch {
+            todos.collect { todoList ->
+                generateNotifications(todoList)
+            }
+        }
     }
     
     fun markNotificationAsRead(notificationId: String) {
         _notifications.value = _notifications.value.filter { it.id != notificationId }
     }
     
-    fun getTasksDueToday(): List<TodoData> {
-        val today = getTodayTimestamp()
-        val tomorrow = today + 86400000
-        return _todos.value.filter { todo ->
-            todo.dueDate?.let { dueDate ->
-                dueDate in today until tomorrow
-            } ?: false
+    fun toggleTodoCompleted(todo: TodoData) {
+        viewModelScope.launch {
+            try {
+                val updatedTodo = todo.copy(
+                    isCompleted = !todo.isCompleted,
+                    completedAt = if (!todo.isCompleted) System.currentTimeMillis() else null
+                )
+                todoRepository.updateTodo(updatedTodo)
+            } catch (e: Exception) {
+                _errorMessage.value = "Failed to update task: ${e.message}"
+                e.printStackTrace()
+            }
         }
     }
     
-    fun getOverdueTasks(): List<TodoData> {
-        val now = System.currentTimeMillis()
-        return _todos.value.filter { todo ->
-            todo.dueDate?.let { dueDate ->
-                dueDate < now && !todo.isCompleted
-            } ?: false
+    fun deleteTodo(todo: TodoData) {
+        viewModelScope.launch {
+            try {
+                todoRepository.deleteTodo(todo)
+            } catch (e: Exception) {
+                _errorMessage.value = "Failed to delete task: ${e.message}"
+                e.printStackTrace()
+            }
         }
+    }
+    
+    fun clearErrorMessage() {
+        _errorMessage.value = null
     }
 }
 
@@ -181,3 +169,6 @@ enum class NotificationType {
     DUE_SOON,
     OVERDUE
 }
+
+
+

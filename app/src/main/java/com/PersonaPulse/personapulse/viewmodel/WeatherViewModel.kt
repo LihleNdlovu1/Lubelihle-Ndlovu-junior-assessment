@@ -1,17 +1,26 @@
 package com.PersonaPulse.personapulse.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import android.util.Log
 import com.PersonaPulse.personapulse.model.WeatherResponse
+import com.PersonaPulse.personapulse.network.GeocodingService
 import com.PersonaPulse.personapulse.network.WeatherService
+import com.PersonaPulse.personapulse.utils.LocationManager
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.random.Random
 
-class WeatherViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class WeatherViewModel @Inject constructor(
+    private val weatherService: WeatherService,
+    private val geocodingService: GeocodingService,
+    private val locationManager: LocationManager
+) : ViewModel() {
     
     private val _weather = MutableStateFlow<WeatherResponse?>(null)
     val weather: StateFlow<WeatherResponse?> = _weather.asStateFlow()
@@ -28,22 +37,62 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     private val _outfitSuggestion = MutableStateFlow<String?>(null)
     val outfitSuggestion: StateFlow<String?> = _outfitSuggestion.asStateFlow()
     
+    private val _isUsingCurrentLocation = MutableStateFlow(false)
+    val isUsingCurrentLocation: StateFlow<Boolean> = _isUsingCurrentLocation.asStateFlow()
+    
     init {
         fetchWeather()
     }
     
-    fun fetchWeather() {
+    fun fetchWeatherForCurrentLocation() {
         viewModelScope.launch {
             _isLoading.value = true
             _weatherError.value = null
             
             try {
-                // For demo purposes, we'll use mock data instead of real API calls
+                val locationResult = locationManager.getCurrentLocation()
+                locationResult.onSuccess { location ->
+                    _isUsingCurrentLocation.value = true
+                    _selectedCity.value = "Current Location"
+                    fetchWeather(location.latitude, location.longitude)
+                }.onFailure { error ->
+                    _weatherError.value = when (error) {
+                        is SecurityException -> "Location permission not granted"
+                        else -> "Failed to get location: ${error.message}"
+                    }
+                    _isLoading.value = false
+                }
+            } catch (e: Exception) {
+                _weatherError.value = "Failed to get location: ${e.message}"
+                _isLoading.value = false
+            }
+        }
+    }
+    fun fetchWeather(latitude: Double = -26.2041, longitude: Double = 28.0473) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _weatherError.value = null
+            
+            try {
+                Log.d("WeatherViewModel", "Fetching weather for lat=$latitude, lon=$longitude")
+                // Fetch real weather data from API with hourly forecast
+                val weatherData = weatherService.getCurrentWeather(
+                    latitude = latitude,
+                    longitude = longitude,
+                    current = true,
+                    hourly = "temperature_2m,weathercode,windspeed_10m",
+                    forecastDays = 1
+                )
+                Log.d("WeatherViewModel", "Weather data received: $weatherData")
+                _weather.value = weatherData
+                weatherData.current_weather?.let { generateOutfitSuggestion(weatherData) }
+            } catch (e: Exception) {
+                Log.e("WeatherViewModel", "Failed to fetch weather", e)
+                _weatherError.value = "Failed to fetch weather: ${e.message}"
+                // Fallback to mock data on error
                 val mockWeather = createMockWeatherData()
                 _weather.value = mockWeather
                 generateOutfitSuggestion(mockWeather)
-            } catch (e: Exception) {
-                _weatherError.value = "Failed to fetch weather: ${e.message}"
             } finally {
                 _isLoading.value = false
             }
@@ -74,8 +123,8 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     }
     
     private fun generateOutfitSuggestion(weather: WeatherResponse) {
-        val temperature = weather.current_weather.temperature
-        val weatherCode = weather.current_weather.weathercode
+        val temperature = weather.current_weather?.temperature ?: return
+        val weatherCode = weather.current_weather?.weathercode ?: return
         
         val suggestion = when {
             temperature < 0 -> "Bundle up! Wear a heavy coat, gloves, and a warm hat. It's freezing!"
@@ -98,7 +147,32 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     
     fun updateCity(city: String) {
         _selectedCity.value = city
-        fetchWeather()
+        _isUsingCurrentLocation.value = false
+        viewModelScope.launch {
+            _isLoading.value = true
+            _weatherError.value = null
+            
+            try {
+                // Get coordinates for the city
+                val geocodeResults = geocodingService.searchCity(city)
+                if (geocodeResults.isNotEmpty()) {
+                    val result = geocodeResults[0]
+                    val latitude = result.lat.toDouble()
+                    val longitude = result.lon.toDouble()
+                    fetchWeather(latitude, longitude)
+                } else {
+                    _weatherError.value = "City not found"
+                    _isLoading.value = false
+                }
+            } catch (e: Exception) {
+                _weatherError.value = "Failed to find city: ${e.message}"
+                _isLoading.value = false
+            }
+        }
+    }
+    
+    fun hasLocationPermission(): Boolean {
+        return locationManager.hasLocationPermission()
     }
     
     fun refreshWeather() {

@@ -22,7 +22,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Cloud
+import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material.icons.filled.WbSunny
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import android.Manifest
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -49,7 +53,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.PersonaPulse.personapulse.ui.components.common.BottomNavigationBar
 import com.PersonaPulse.personapulse.viewmodel.WeatherViewModel
@@ -57,19 +61,56 @@ import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WeatherScreen(navController: NavController, viewModel: WeatherViewModel = viewModel()) {
+fun WeatherScreen(navController: NavController, viewModel: WeatherViewModel = hiltViewModel()) {
     val weatherResponse by viewModel.weather.collectAsState()
     val weatherError by viewModel.weatherError.collectAsState()
     val isWeatherLoading by viewModel.isLoading.collectAsState()
     val selectedCity by viewModel.selectedCity.collectAsState()
+    val isUsingCurrentLocation by viewModel.isUsingCurrentLocation.collectAsState()
     
     var showDetails by remember { mutableStateOf(false) }
     var animateWeatherIcon by remember { mutableStateOf(false) }
     var animateBackground by remember { mutableStateOf(false) }
     
-    // Mock weather data for demonstration
-    val weatherData = remember {
-        WeatherData(
+    // Location permission launcher
+    val locationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val fineLocationGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false
+        val coarseLocationGranted = permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false
+        
+        if (fineLocationGranted || coarseLocationGranted) {
+            viewModel.fetchWeatherForCurrentLocation()
+        }
+    }
+    
+    // Convert API response to UI data
+    val weatherData = remember(weatherResponse, selectedCity) {
+        weatherResponse?.current_weather?.let { currentWeather ->
+            val temp = currentWeather.temperature.toInt()
+            val condition = when (currentWeather.weathercode) {
+                0 -> "Clear"
+                1, 2 -> "Partly Cloudy"
+                3 -> "Cloudy"
+                45, 48 -> "Foggy"
+                51, 53, 55 -> "Drizzle"
+                61, 63, 65 -> "Rainy"
+                71, 73, 75 -> "Snowy"
+                80, 81, 82 -> "Rain Showers"
+                95, 96, 99 -> "Thunderstorm"
+                else -> "Unknown"
+            }
+            
+            WeatherData(
+                location = selectedCity ?: "Unknown",
+                temperature = "${temp}°",
+                condition = condition,
+                feelsLike = "${temp - 2}°", // Approximate feels like
+                humidity = "${(currentWeather.windspeed * 3).toInt()}%", // Mock humidity
+                sunrise = "06:30", // Mock sunrise
+                sunset = "18:45"   // Mock sunset
+            )
+        } ?: WeatherData(
             location = selectedCity ?: "Johannesburg",
             temperature = "24°",
             condition = "Sunny",
@@ -106,12 +147,34 @@ fun WeatherScreen(navController: NavController, viewModel: WeatherViewModel = vi
                         )
                     }
                 },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            if (viewModel.hasLocationPermission()) {
+                                viewModel.fetchWeatherForCurrentLocation()
+                            } else {
+                                locationPermissionLauncher.launch(
+                                    arrayOf(
+                                        Manifest.permission.ACCESS_FINE_LOCATION,
+                                        Manifest.permission.ACCESS_COARSE_LOCATION
+                                    )
+                                )
+                            }
+                        }
+                    ) {
+                        Icon(
+                            Icons.Default.MyLocation,
+                            contentDescription = "Use Current Location",
+                            tint = if (isUsingCurrentLocation) Color(0xFF4CAF50) else Color.White
+                        )
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent
+                    containerColor = Color.Black
                 )
             )
         },
-        containerColor = Color.Transparent
+        containerColor = Color.Black
     ) { padding ->
         Box(modifier = Modifier.fillMaxSize()) {
             // Animated background
@@ -132,6 +195,24 @@ fun WeatherScreen(navController: NavController, viewModel: WeatherViewModel = vi
                         .padding(bottom = 80.dp)
                 ) {
                     Spacer(modifier = Modifier.height(20.dp))
+                    
+                    // Show error message if present
+                    weatherError?.let { error ->
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.Red.copy(alpha = 0.2f)
+                            ),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = error,
+                                color = Color.White,
+                                modifier = Modifier.padding(16.dp),
+                                fontSize = 14.sp
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
                     
                     // Main Weather Card
                     MainWeatherCard(
@@ -199,7 +280,7 @@ fun WeatherScreen(navController: NavController, viewModel: WeatherViewModel = vi
                     
                     if (showDetails) {
                         Spacer(modifier = Modifier.height(16.dp))
-                        WeatherChartCard()
+                        WeatherChartCard(weatherResponse = weatherResponse)
                     }
                 }
             }
@@ -509,7 +590,7 @@ fun OutfitSuggestionCard(weatherData: WeatherData) {
 }
 
 @Composable
-fun WeatherChartCard() {
+fun WeatherChartCard(weatherResponse: com.PersonaPulse.personapulse.model.WeatherResponse?) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.1f)),
@@ -528,23 +609,86 @@ fun WeatherChartCard() {
             
             Spacer(modifier = Modifier.height(16.dp))
             
-            // Mock chart placeholder
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .background(
-                        Color.White.copy(alpha = 0.1f),
-                        RoundedCornerShape(12.dp)
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "Temperature Chart\n(Coming Soon)",
-                    color = Color.White.copy(alpha = 0.7f),
-                    textAlign = TextAlign.Center
-                )
+            weatherResponse?.hourly?.let { hourly ->
+                // Display hourly forecast data
+                androidx.compose.foundation.lazy.LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(hourly.time.size.coerceAtMost(24)) { index ->
+                        HourlyForecastItem(
+                            time = hourly.time[index],
+                            temperature = hourly.temperature_2m[index],
+                            weatherCode = hourly.weathercode[index]
+                        )
+                    }
+                }
+            } ?: run {
+                // Fallback if no hourly data
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp)
+                        .background(
+                            Color.White.copy(alpha = 0.1f),
+                            RoundedCornerShape(12.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "No forecast data available",
+                        color = Color.White.copy(alpha = 0.7f),
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
+        }
+    }
+}
+
+@Composable
+fun HourlyForecastItem(time: String, temperature: Double, weatherCode: Int) {
+    val hour = time.substring(11, 16) // Extract HH:MM from ISO 8601
+    val weatherIcon = when (weatherCode) {
+        0 -> "☀️"
+        1, 2 -> "⛅"
+        3 -> "☁️"
+        45, 48 -> "🌫️"
+        51, 53, 55 -> "🌦️"
+        61, 63, 65 -> "🌧️"
+        71, 73, 75 -> "❄️"
+        80, 81, 82 -> "🌧️"
+        95, 96, 99 -> "⛈️"
+        else -> "🌤️"
+    }
+    
+    Card(
+        colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.15f)),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(12.dp)
+                .width(70.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = hour,
+                color = Color.White,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Medium
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = weatherIcon,
+                fontSize = 24.sp
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "${temperature.toInt()}°",
+                color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }@Composable
@@ -626,29 +770,10 @@ fun ModernLoadingView() {
 
 @Composable
 fun AnimatedBackgroundView(condition: String) {
-    val animateGradient by remember { mutableStateOf(true) }
-    
-    val gradientColors = when {
-        condition.contains("Sun", ignoreCase = true) || condition.contains("Clear", ignoreCase = true) -> 
-            listOf(Color(0xFFFFA500), Color(0xFFFFD700), Color(0xFF87CEEB))
-        condition.contains("Cloud", ignoreCase = true) -> 
-            listOf(Color(0xFF808080), Color(0xFF4169E1), Color(0xFF9370DB))
-        condition.contains("Rain", ignoreCase = true) -> 
-            listOf(Color(0xFF0000FF), Color(0xFF808080), Color(0xFF000000))
-        else -> 
-            listOf(Color(0xFF4169E1), Color(0xFF9370DB), Color(0xFFFF69B4))
-    }
-    
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.linearGradient(
-                    colors = gradientColors.map { it.copy(alpha = 0.6f) },
-                    start = if (animateGradient) androidx.compose.ui.geometry.Offset(0.0f, 0.0f) else androidx.compose.ui.geometry.Offset(1.0f, 1.0f),
-                    end = if (animateGradient) androidx.compose.ui.geometry.Offset(1.0f, 1.0f) else androidx.compose.ui.geometry.Offset(0.0f, 0.0f)
-                )
-            )
+            .background(Color.Black)
     )
 }
 

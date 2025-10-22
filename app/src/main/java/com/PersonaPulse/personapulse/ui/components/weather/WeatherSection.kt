@@ -71,7 +71,7 @@ fun WeatherSection(
                     }
                     weatherResponse != null -> {
                         val temperatureText = try {
-                            "${weatherResponse.current_weather.temperature.toInt()}°C"
+                            "${weatherResponse.current_weather?.temperature?.toInt() ?: "--"}°C"
                         } catch (e: Exception) {
                             "Temperature unavailable"
                         }
@@ -99,9 +99,9 @@ fun WeatherSection(
             }
 
             // Weather icon
-            weatherResponse?.let { weather ->
+            weatherResponse?.current_weather?.let { currentWeather ->
                 val isDayTime = try {
-                    weather.current_weather.is_day == 1
+                    currentWeather.is_day == 1
                 } catch (e: Exception) {
                     true
                 }
