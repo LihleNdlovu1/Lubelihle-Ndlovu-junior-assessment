@@ -49,9 +49,9 @@ import kotlin.math.roundToInt
 fun TodoListSection(
     incompleteGoals: List<TodoData>,
     completedGoals: List<TodoData>,
-    onToggleGoal: (Int) -> Unit,
-    onEditGoal: (Int) -> Unit,
-    onDeleteGoal: (Int) -> Unit,
+    onToggleGoal: (TodoData) -> Unit,
+    onEditGoal: (TodoData) -> Unit,
+    onDeleteGoal: (TodoData) -> Unit,
     allGoals: List<TodoData>,
     modifier: Modifier = Modifier
 ) {
@@ -64,42 +64,127 @@ fun TodoListSection(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Normal
                 ),
-                color = Color.White,
+                color = Color(0xFFCDDC39),
                 modifier = Modifier.padding(vertical = 8.dp)
             )
 
             incompleteGoals.forEach { goal ->
-                SwipeableTodoCard(
+                com.PersonaPulse.personapulse.ui.components.dashboard.TodoCard(
                     goal = goal,
-                    onToggle = { onToggleGoal(allGoals.indexOf(goal)) },
-                    onEdit = { onEditGoal(allGoals.indexOf(goal)) },
-                    onDelete = { onDeleteGoal(allGoals.indexOf(goal)) }
+                    onToggle = { onToggleGoal(goal) },
+                    onEdit = { onEditGoal(goal) },
+                    onDelete = { onDeleteGoal(goal) }
                 )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
         }
+    }
+}
 
-        // Completed tasks section
-        if (completedGoals.isNotEmpty()) {
-            Text(
-                "Complete",
-                style = MaterialTheme.typography.bodyMedium.copy(
+@Composable
+fun SwipeToDeleteCard(
+    goal: TodoData,
+    onToggle: () -> Unit,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var offsetX by remember { mutableFloatStateOf(0f) }
+    var isSwipeToDelete by remember { mutableStateOf<Boolean>(false) }
+    
+    val animatedOffsetX by animateFloatAsState(
+        targetValue = if (isSwipeToDelete) {
+            if (offsetX < 0) -300f else 300f
+        } else offsetX,
+        animationSpec = tween(300),
+        label = "offsetX"
+    )
+    
+    Box(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        // Delete background - shows on both sides
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    Color.Black,
+                    RoundedCornerShape(20.dp)
+                )
+                .padding(16.dp)
+        ) {
+            // Left side delete icon
+            Row(
+                modifier = Modifier.align(Alignment.CenterStart),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    Icons.Default.Delete,
+                    contentDescription = "Delete",
+                    tint = Color.White,
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Delete",
+                    color = Color.White,
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Normal
-                ),
-                color = Color.White,
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
-
-            completedGoals.forEach { goal ->
-                SwipeableTodoCard(
-                    goal = goal,
-                    onToggle = { onToggleGoal(allGoals.indexOf(goal)) },
-                    onEdit = { onEditGoal(allGoals.indexOf(goal)) },
-                    onDelete = { onDeleteGoal(allGoals.indexOf(goal)) }
+                    fontWeight = FontWeight.Bold
                 )
             }
+            
+            // Right side delete icon
+            Row(
+                modifier = Modifier.align(Alignment.CenterEnd),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Delete",
+                    color = Color.White,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    Icons.Default.Delete,
+                    contentDescription = "Delete",
+                    tint = Color.White,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        }
+        
+        // Task card with swipe gesture
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .offset { IntOffset(animatedOffsetX.roundToInt(), 0) }
+                .pointerInput(Unit) {
+                    detectDragGestures(
+                        onDragEnd = {
+                            if (offsetX < -150 || offsetX > 150) {
+                                // Swipe far enough to delete
+                                isSwipeToDelete = true
+                                onDelete()
+                            } else {
+                                // Snap back to original position
+                                offsetX = 0f
+                            }
+                        }
+                    ) { _, dragAmount ->
+                        val newOffset = offsetX + dragAmount.x
+                        offsetX = newOffset.coerceIn(-250f, 250f)
+                    }
+                }
+        ) {
+            com.PersonaPulse.personapulse.ui.components.dashboard.TodoCard(
+                goal = goal,
+                onToggle = onToggle,
+                onEdit = onEdit
+            )
         }
     }
 }
@@ -178,7 +263,7 @@ fun SwipeableTodoCard(
                         offsetX = newOffset.coerceIn(-200f, 0f)
                     }
                 },
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A)),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF1C1C1C)),
             shape = RoundedCornerShape(8.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
         ) {
@@ -191,89 +276,3 @@ fun SwipeableTodoCard(
     }
 }
 
-@Composable
-fun TodoCard(
-    goal: TodoData,
-    onToggle: () -> Unit,
-    onEdit: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val priorityColors = when (goal.priority) {
-        Priority.HIGH -> Color(0xFFFF4444)
-        Priority.MEDIUM -> Color(0xFFFFB347)
-        Priority.LOW -> Color(0xFF4CAF50)
-        Priority.OVERDUE -> Color(0xFF9C27B0)
-    }
-    
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { onEdit() },
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A)),
-        shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Checkbox with better styling
-            androidx.compose.material3.Checkbox(
-                checked = goal.isCompleted,
-                onCheckedChange = { onToggle() },
-                colors = androidx.compose.material3.CheckboxDefaults.colors(
-                    checkedColor = Color(0xFF4CAF50),
-                    uncheckedColor = Color.Gray,
-                    checkmarkColor = Color.White
-                ),
-                modifier = Modifier.size(24.dp)
-            )
-            
-            Spacer(modifier = Modifier.width(12.dp))
-            
-            // Task content
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = goal.title,
-                    color = if (goal.isCompleted) Color.Gray else Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    textDecoration = if (goal.isCompleted) TextDecoration.LineThrough else TextDecoration.None
-                )
-                
-                if (!goal.description.isNullOrBlank()) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = goal.description,
-                        color = if (goal.isCompleted) Color.Gray else Color.Gray,
-                        fontSize = 14.sp,
-                        textDecoration = if (goal.isCompleted) TextDecoration.LineThrough else TextDecoration.None
-                    )
-                }
-                
-                Spacer(modifier = Modifier.height(8.dp))
-                
-                // Priority badge with improved styling
-                Box(
-                    modifier = Modifier
-                        .background(
-                            priorityColors.copy(alpha = 0.2f),
-                            RoundedCornerShape(12.dp)
-                        )
-                        .padding(horizontal = 12.dp, vertical = 6.dp)
-                ) {
-                    Text(
-                        text = goal.priority.name,
-                        color = priorityColors,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-        }
-    }
-}

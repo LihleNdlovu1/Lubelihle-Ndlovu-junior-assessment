@@ -1,10 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <!-- Original colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    
+    <!-- New color palette -->
+    <color name="color_1">#F9FBE7</color>  <!-- Lightest lime -->
+    <color name="color_2">#F0F4C3</color>  <!-- Very light lime -->
+    <color name="color_3">#E6EE9C</color>  <!-- Light lime -->
+    <color name="color_4">#DCE775</color>  <!-- Soft lime -->
+    <color name="color_5">#D4E157</color>  <!-- Medium lime -->
+    <color name="color_6">#CDDC39</color>  <!-- Bright lime -->
+    <color name="color_7">#C0CA33</color>  <!-- Vibrant lime -->
+    <color name="color_8">#AFB42B</color>  <!-- Deep lime -->
+    <color name="color_9">#9E9D24</color>  <!-- Dark lime -->
+    <color name="color_10">#827717</color> <!-- Darkest lime -->
+    
+    <!-- Theme color assignments -->
+    <color name="primary">#CDDC39</color>           <!-- color_6 - Bright lime as primary -->
+    <color name="primary_variant">#C0CA33</color>   <!-- color_7 - Vibrant lime as primary variant -->
+    <color name="secondary">#D4E157</color>         <!-- color_5 - Medium lime as secondary -->
+    <color name="secondary_variant">#DCE775</color> <!-- color_4 - Soft lime as secondary variant -->
+    
+    <!-- Background colors -->
+    <color name="background">#FF000000</color>      <!-- Black background -->
+    <color name="surface">#FF1C1C1C</color>         <!-- Dark gray surface -->
+    <color name="surface_variant">#FF2C2C2E</color> <!-- Slightly lighter gray -->
+    
+    <!-- Text colors -->
+    <color name="on_primary">#FF000000</color>      <!-- Black text on primary -->
+    <color name="on_secondary">#FF000000</color>    <!-- Black text on secondary -->
+    <color name="on_background">#FFFFFFFF</color>   <!-- White text on black background -->
+    <color name="on_surface">#FFFFFFFF</color>      <!-- White text on surface -->
+    <color name="on_surface_variant">#FFCCCCCC</color> <!-- Light gray text -->
+    
+    <!-- Accent colors -->
+    <color name="accent_light">#F9FBE7</color>      <!-- color_1 - Lightest for highlights -->
+    <color name="accent_medium">#E6EE9C</color>     <!-- color_3 - Medium for cards -->
+    <color name="accent_dark">#9E9D24</color>       <!-- color_9 - Dark for borders -->
+    
+    <!-- Status colors -->
+    <color name="success">#4CAF50</color>           <!-- Green for success -->
+    <color name="warning">#FF9800</color>           <!-- Orange for warnings -->
+    <color name="error">#F44336</color>             <!-- Red for errors -->
+    <color name="info">#2196F3</color>              <!-- Blue for info -->
 </resources>
