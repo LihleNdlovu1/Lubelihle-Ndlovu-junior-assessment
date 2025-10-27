@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    
+    <!-- Human figure (simplified silhouette) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M100,30 C95,30 90,35 90,40 L90,60 C90,65 95,70 100,70 C105,70 110,65 110,60 L110,40 C110,35 105,30 100,30 Z" />
+    
+    <!-- Body -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M85,70 L85,130 C85,135 90,140 100,140 C110,140 115,135 115,130 L115,70 Z" />
+    
+    <!-- Raised arm -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M115,80 C120,75 125,80 120,90 L115,95 C110,90 110,85 115,80 Z" />
+    
+    <!-- Clipboard -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#2E7D32"
+        android:strokeWidth="3"
+        android:pathData="M75,100 L75,150 L125,150 L125,100 Z" />
+    
+    <!-- Clipboard clip -->
+    <path
+        android:fillColor="#2E7D32"
+        android:pathData="M80,95 L120,95 L120,100 L80,100 Z" />
+    
+    <!-- Checkmark with gradient effect -->
+    <path
+        android:fillColor="#4CAF50"
+        android:strokeColor="#2E7D32"
+        android:strokeWidth="2"
+        android:pathData="M90,120 L95,125 L110,110" />
+    
+    <!-- Lightning bolt -->
+    <path
+        android:fillColor="#FFEB3B"
+        android:pathData="M120,35 L125,45 L120,50 L130,50 L125,60 L120,55 L120,35 Z" />
+    
+    <!-- Sparkle/Star in bottom right -->
+    <path
+        android:fillColor="#CCCCCC"
+        android:pathData="M180,180 L182,185 L187,185 L183,188 L185,193 L180,190 L175,193 L177,188 L173,185 L178,185 Z" />
+</vector>
