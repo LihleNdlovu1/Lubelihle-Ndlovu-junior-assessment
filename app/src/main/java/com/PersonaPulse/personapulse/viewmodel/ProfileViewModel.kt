@@ -3,6 +3,7 @@ package com.PersonaPulse.personapulse.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.PersonaPulse.personapulse.model.TodoData
+import com.PersonaPulse.personapulse.repository.ITodoRepository
 import com.PersonaPulse.personapulse.repository.TodoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val todoRepository: TodoRepository
+    private val todoRepository: ITodoRepository
 ) : ViewModel() {
     
     private val _userProfile = MutableStateFlow<UserProfile?>(null)

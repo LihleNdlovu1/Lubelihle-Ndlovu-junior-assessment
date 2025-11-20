@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import com.PersonaPulse.personapulse.database.PersonaPulseDatabase
 import com.PersonaPulse.personapulse.database.dao.TodoDao
+import com.PersonaPulse.personapulse.repository.ITodoRepository
+import com.PersonaPulse.personapulse.repository.TodoRepository
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,4 +35,5 @@ object DatabaseModule {
     fun provideTodoDao(database: PersonaPulseDatabase): TodoDao {
         return database.todoDao()
     }
+
 }

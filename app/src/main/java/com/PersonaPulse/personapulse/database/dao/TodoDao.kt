@@ -34,8 +34,10 @@ interface TodoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTodo(todo: TodoEntity)
 
+    /*
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTodos(todos: List<TodoEntity>)
+     */
 
     @Update
     suspend fun updateTodo(todo: TodoEntity)
@@ -46,8 +48,11 @@ interface TodoDao {
     @Query("DELETE FROM todos WHERE id = :id")
     suspend fun deleteTodoById(id: String)
 
+    /*
     @Query("DELETE FROM todos")
     suspend fun deleteAllTodos()
+
+     */
 
     @Query("UPDATE todos SET isCompleted = :isCompleted, completedAt = :completedAt WHERE id = :id")
     suspend fun updateTodoCompletion(id: String, isCompleted: Boolean, completedAt: Long?)

@@ -12,92 +12,100 @@ import javax.inject.Singleton
 @Singleton
 class TodoRepository @Inject constructor(
     private val todoDao: TodoDao
-) {
-    fun getAllTodos(): Flow<List<TodoData>> {
+): ITodoRepository {
+    override fun getAllTodos(): Flow<List<TodoData>> {
         return todoDao.getAllTodos().map { entities ->
             entities.map { it.toTodoData() }
         }
     }
 
-    fun getIncompleteTodos(): Flow<List<TodoData>> {
+    override fun getIncompleteTodos(): Flow<List<TodoData>> {
         return todoDao.getIncompleteTodos().map { entities ->
             entities.map { it.toTodoData() }
         }
     }
 
-    fun getCompletedTodos(): Flow<List<TodoData>> {
+    override fun getCompletedTodos(): Flow<List<TodoData>> {
         return todoDao.getCompletedTodos().map { entities ->
             entities.map { it.toTodoData() }
         }
     }
 
-    suspend fun getTodoById(id: String): TodoData? {
+
+    override suspend fun getTodoById(id: String): TodoData? {
         return todoDao.getTodoById(id)?.toTodoData()
     }
 
-    fun getTodosByDateRange(startTime: Long, endTime: Long): Flow<List<TodoData>> {
+    override fun getTodosByDateRange(startTime: Long, endTime: Long): Flow<List<TodoData>> {
         return todoDao.getTodosByDateRange(startTime, endTime).map { entities ->
             entities.map { it.toTodoData() }
         }
     }
 
-    fun getTodosByPriority(priority: Priority): Flow<List<TodoData>> {
+    override fun getTodosByPriority(priority: Priority): Flow<List<TodoData>> {
         return todoDao.getTodosByPriority(priority).map { entities ->
             entities.map { it.toTodoData() }
         }
     }
 
-    fun getTodosByCategory(category: String): Flow<List<TodoData>> {
+    override fun getTodosByCategory(category: String): Flow<List<TodoData>> {
         return todoDao.getTodosByCategory(category).map { entities ->
             entities.map { it.toTodoData() }
         }
     }
 
-    fun searchTodos(searchQuery: String): Flow<List<TodoData>> {
+    override fun searchTodos(searchQuery: String): Flow<List<TodoData>> {
         return todoDao.searchTodos("%$searchQuery%").map { entities ->
             entities.map { it.toTodoData() }
         }
     }
 
-    suspend fun insertTodo(todo: TodoData) {
+    override suspend fun insertTodo(todo: TodoData) {
         todoDao.insertTodo(todo.toTodoEntity())
     }
 
+    /*
     suspend fun insertTodos(todos: List<TodoData>) {
         todoDao.insertTodos(todos.map { it.toTodoEntity() })
     }
+     */
 
-    suspend fun updateTodo(todo: TodoData) {
+    override suspend fun updateTodo(todo: TodoData) {
         todoDao.updateTodo(todo.toTodoEntity())
     }
 
-    suspend fun deleteTodo(todo: TodoData) {
+    override suspend fun deleteTodo(todo: TodoData) {
         todoDao.deleteTodo(todo.toTodoEntity())
     }
 
-    suspend fun deleteTodoById(id: String) {
+    override suspend fun deleteTodoById(id: String) {
         todoDao.deleteTodoById(id)
     }
 
+    /*
     suspend fun deleteAllTodos() {
         todoDao.deleteAllTodos()
     }
 
-    suspend fun updateTodoCompletion(id: String, isCompleted: Boolean, completedAt: Long?) {
+     */
+
+    override suspend fun updateTodoCompletion(id: String, isCompleted: Boolean, completedAt: Long?) {
         todoDao.updateTodoCompletion(id, isCompleted, completedAt)
     }
 
-    fun getIncompleteTodoCount(): Flow<Int> {
+    override fun getIncompleteTodoCount(): Flow<Int> {
         return todoDao.getIncompleteTodoCount()
     }
 
-    fun getCompletedTodoCount(): Flow<Int> {
+    override fun getCompletedTodoCount(): Flow<Int> {
         return todoDao.getCompletedTodoCount()
     }
 
-    fun getTotalTodoCount(): Flow<Int> {
+    override fun getTotalTodoCount(): Flow<Int> {
         return todoDao.getTotalTodoCount()
     }
+
+
 }
 
 // Extension functions to convert between TodoData and TodoEntity
