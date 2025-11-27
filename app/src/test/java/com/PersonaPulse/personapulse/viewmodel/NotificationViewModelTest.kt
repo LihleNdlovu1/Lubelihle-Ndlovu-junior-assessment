@@ -124,7 +124,7 @@ class NotificationViewModelTest {
     }
 
     @Test
-    fun `delete todo deletes todo`() = runTest {
+    fun `deleteTodo deletes todo`() = runTest {
         val todo = TodoData(
             id = "1",
             title = "Test",

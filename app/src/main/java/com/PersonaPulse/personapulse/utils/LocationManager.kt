@@ -25,11 +25,11 @@ data class LocationData(
 @Singleton
 class LocationManager @Inject constructor(
     @ApplicationContext private val context: Context
-) {
+): ILocationManager {
     private val fusedLocationClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(context)
 
-    fun hasLocationPermission(): Boolean {
+    override fun hasLocationPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.ACCESS_FINE_LOCATION
@@ -40,7 +40,7 @@ class LocationManager @Inject constructor(
                 ) == PackageManager.PERMISSION_GRANTED
     }
 
-    suspend fun getCurrentLocation(): Result<LocationData> {
+    override suspend fun getCurrentLocation(): Result<LocationData> {
         if (!hasLocationPermission()) {
             return Result.failure(SecurityException("Location permission not granted"))
         }
@@ -121,7 +121,7 @@ class LocationManager @Inject constructor(
         }
     }
 
-    fun getLocationUpdates(): Flow<LocationData> = callbackFlow {
+     fun getLocationUpdates(): Flow<LocationData> = callbackFlow {
         if (!hasLocationPermission()) {
             close(SecurityException("Location permission not granted"))
             return@callbackFlow

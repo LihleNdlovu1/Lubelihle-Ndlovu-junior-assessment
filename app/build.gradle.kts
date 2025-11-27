@@ -73,6 +73,7 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(libs.core.ktx)
+    implementation(libs.androidx.uiautomator)
     ksp(libs.androidx.room.compiler)
     
     // Hilt Dependency Injection
@@ -107,6 +108,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.13.0-RC1")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+
+    androidTestImplementation("org.mockito:mockito-android:5.8.0")
+    androidTestImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
     
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)

@@ -6,7 +6,7 @@ import android.util.Log
 import com.PersonaPulse.personapulse.model.WeatherResponse
 import com.PersonaPulse.personapulse.network.GeocodingService
 import com.PersonaPulse.personapulse.network.WeatherService
-import com.PersonaPulse.personapulse.utils.LocationManager
+import com.PersonaPulse.personapulse.utils.ILocationManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +19,7 @@ import kotlin.random.Random
 class WeatherViewModel @Inject constructor(
     private val weatherService: WeatherService,
     private val geocodingService: GeocodingService,
-    private val locationManager: LocationManager
+    private val locationManager: ILocationManager
 ) : ViewModel() {
     
     private val _weather = MutableStateFlow<WeatherResponse?>(null)

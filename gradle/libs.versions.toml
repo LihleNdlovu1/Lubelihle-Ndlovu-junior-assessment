@@ -21,6 +21,7 @@ room = "2.6.1"
 hilt = "2.57.1"
 playServicesLocation = "21.3.0"
 coreKtxVersion = "1.7.0"
+uiautomator = "2.3.0"
 
 
 
@@ -68,6 +69,7 @@ hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", v
 # Google Play Services Location
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtxVersion" }
+androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomator" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

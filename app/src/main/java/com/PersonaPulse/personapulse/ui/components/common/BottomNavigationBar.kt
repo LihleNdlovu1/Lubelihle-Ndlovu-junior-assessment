@@ -33,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -185,6 +186,7 @@ private fun CentralAddButton(
             .size(52.dp)
             .clip(RoundedCornerShape(16.dp))
             .background(Color(0xFFCDDC39))
+            .testTag("add_task_button")
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null

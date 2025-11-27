@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 
 class FakeTodoRepository : ITodoRepository {
-
     private val todos = mutableListOf<TodoData>()
 
     private val allTodosFlow = MutableStateFlow<List<TodoData>>(emptyList())
@@ -29,6 +28,7 @@ class FakeTodoRepository : ITodoRepository {
 
     override fun getCompletedTodos(): Flow<List<TodoData>> =
         allTodosFlow.map { list -> list.filter { it.isCompleted } }
+
 
     override suspend fun getTodoById(id: String): TodoData? =
         todos.find { it.id == id }

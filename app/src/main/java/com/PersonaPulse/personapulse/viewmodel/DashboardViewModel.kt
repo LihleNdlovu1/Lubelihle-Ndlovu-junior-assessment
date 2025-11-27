@@ -10,10 +10,14 @@ import kotlinx.coroutines.launch
 import com.PersonaPulse.personapulse.model.TodoData
 import com.PersonaPulse.personapulse.model.WeatherResponse
 import com.PersonaPulse.personapulse.model.CurrentWeather
+import com.PersonaPulse.personapulse.model.Priority
 import com.PersonaPulse.personapulse.network.GeocodingService
 import com.PersonaPulse.personapulse.network.WeatherService
+import com.PersonaPulse.personapulse.notification.INotificationManager
 import com.PersonaPulse.personapulse.notification.NotificationManager
+import com.PersonaPulse.personapulse.repository.ITodoRepository
 import com.PersonaPulse.personapulse.repository.TodoRepository
+import com.PersonaPulse.personapulse.utils.ILocationManager
 import com.PersonaPulse.personapulse.utils.LocationManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -21,11 +25,11 @@ import kotlin.random.Random
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val todoRepository: TodoRepository,
-    private val notificationManager: NotificationManager,
+    private val todoRepository: ITodoRepository,
+    private val notificationManager: INotificationManager,
     private val weatherService: WeatherService,
     private val geocodingService: GeocodingService,
-    private val locationManager: LocationManager
+    private val locationManager: ILocationManager
 ) : ViewModel() {
     
     // Todo-related state - now using Room database
@@ -99,7 +103,7 @@ class DashboardViewModel @Inject constructor(
         }
     }
     
-    fun addTodo(title: String, description: String?, priority: com.PersonaPulse.personapulse.model.Priority, dueDate: Long?, category: String? = null, reminderTime: Long? = null) {
+    fun addTodo(title: String, description: String?, priority: Priority, dueDate: Long?, category: String? = null, reminderTime: Long? = null) {
         viewModelScope.launch {
             try {
                 // Validate input
@@ -131,7 +135,7 @@ class DashboardViewModel @Inject constructor(
         }
     }
     
-    fun updateTodo(todo: TodoData, title: String, description: String?, priority: com.PersonaPulse.personapulse.model.Priority, dueDate: Long?, category: String? = null, reminderTime: Long? = null) {
+    fun updateTodo(todo: TodoData, title: String, description: String?, priority: Priority, dueDate: Long?, category: String? = null, reminderTime: Long? = null) {
         viewModelScope.launch {
             try {
                 // Validate input

@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import com.PersonaPulse.personapulse.model.TodoData
+import com.PersonaPulse.personapulse.repository.ITodoRepository
 import com.PersonaPulse.personapulse.repository.TodoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -33,7 +34,7 @@ data class ProductivityInsights(
 
 @HiltViewModel
 class AnalyticsViewModel @Inject constructor(
-    private val todoRepository: TodoRepository
+    private val todoRepository: ITodoRepository
 ) : ViewModel() {
     
     private val _performanceStats = MutableStateFlow<PerformanceStats?>(null)

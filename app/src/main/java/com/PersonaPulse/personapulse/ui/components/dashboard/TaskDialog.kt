@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import java.text.SimpleDateFormat
@@ -101,7 +102,8 @@ fun TaskDialog(
                             }
                         },
                         label = { Text("Task Title *", color = Color.White) },
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth()
+                            .testTag("TitleTextField"),
                         singleLine = true,
                         isError = titleError != null,
                         supportingText = titleError?.let { { Text(it, color = Color.Red) } },

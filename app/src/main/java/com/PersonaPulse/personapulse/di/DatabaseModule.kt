@@ -1,9 +1,11 @@
 package com.PersonaPulse.personapulse.di
 
+import android.app.AlarmManager
 import android.content.Context
 import androidx.room.Room
 import com.PersonaPulse.personapulse.database.PersonaPulseDatabase
 import com.PersonaPulse.personapulse.database.dao.TodoDao
+import com.PersonaPulse.personapulse.notification.NotificationService
 import com.PersonaPulse.personapulse.repository.ITodoRepository
 import com.PersonaPulse.personapulse.repository.TodoRepository
 import dagger.Binds
@@ -34,6 +36,22 @@ object DatabaseModule {
     @Singleton
     fun provideTodoDao(database: PersonaPulseDatabase): TodoDao {
         return database.todoDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAlarmManager(
+        @ApplicationContext context: Context
+    ): AlarmManager {
+        return context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    }
+
+    @Provides
+    @Singleton
+    fun provideNotificationService(
+        @ApplicationContext context: Context
+    ): NotificationService {
+        return NotificationService(context)
     }
 
 }

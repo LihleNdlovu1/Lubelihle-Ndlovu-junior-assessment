@@ -1,5 +1,6 @@
 package com.PersonaPulse.personapulse.network
 
+import com.PersonaPulse.personapulse.model.WeatherResponse
 interface WeatherService {
     @retrofit2.http.GET("v1/forecast")
     suspend fun getCurrentWeather(
@@ -8,5 +9,5 @@ interface WeatherService {
         @retrofit2.http.Query("current_weather") current: Boolean = true,
         @retrofit2.http.Query("hourly") hourly: String? = null,
         @retrofit2.http.Query("forecast_days") forecastDays: Int = 1
-    ): com.PersonaPulse.personapulse.model.WeatherResponse
+    ): WeatherResponse
 }

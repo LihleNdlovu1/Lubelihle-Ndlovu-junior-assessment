@@ -12,7 +12,7 @@ import com.PersonaPulse.personapulse.MainActivity
 import com.PersonaPulse.personapulse.R
 import com.PersonaPulse.personapulse.model.TodoData
 
-class NotificationService(private val context: Context) {
+class NotificationService(private val context: Context): INotificationService {
     
     companion object {
         const val CHANNEL_ID_TASK_REMINDER = "task_reminder"
@@ -72,7 +72,7 @@ class NotificationService(private val context: Context) {
         }
     }
     
-    fun showTaskReminderNotification(todo: TodoData) {
+    override fun showTaskReminderNotification(todo: TodoData) {
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
@@ -101,7 +101,7 @@ class NotificationService(private val context: Context) {
         }
     }
     
-    fun showOverdueTaskNotification(todo: TodoData) {
+    override fun showOverdueTaskNotification(todo: TodoData) {
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
@@ -131,7 +131,7 @@ class NotificationService(private val context: Context) {
         }
     }
     
-    fun showDailySummaryNotification(completedTasks: Int, pendingTasks: Int) {
+    override fun showDailySummaryNotification(completedTasks: Int, pendingTasks: Int) {
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
@@ -160,13 +160,13 @@ class NotificationService(private val context: Context) {
         }
     }
     
-    fun cancelNotification(notificationId: Int) {
+    override fun cancelNotification(notificationId: Int) {
         with(NotificationManagerCompat.from(context)) {
             cancel(notificationId)
         }
     }
     
-    fun cancelAllNotifications() {
+    override fun cancelAllNotifications() {
         with(NotificationManagerCompat.from(context)) {
             cancelAll()
         }

@@ -16,11 +16,10 @@ import javax.inject.Singleton
 
 @Singleton
 class NotificationManager @Inject constructor(
-    @ApplicationContext private val context: Context
-) {
-    
-    private val notificationService = NotificationService(context)
-    private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    @ApplicationContext private val context: Context,
+    private val alarmManager: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager,
+    private val notificationService: INotificationService = NotificationService(context),
+): INotificationManager {
     
     fun checkNotificationPermission(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -33,7 +32,7 @@ class NotificationManager @Inject constructor(
         }
     }
     
-    fun scheduleTaskReminder(todo: TodoData) {
+    override fun scheduleTaskReminder(todo: TodoData) {
         if (!checkNotificationPermission()) return
         
         val reminderTime = todo.dueDate?.let { dueDate ->
@@ -56,23 +55,15 @@ class NotificationManager @Inject constructor(
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                reminderTime,
-                pendingIntent
-            )
-        } else {
-            alarmManager.setExact(
-                AlarmManager.RTC_WAKEUP,
-                reminderTime,
-                pendingIntent
-            )
-        }
+
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            reminderTime,
+            pendingIntent
+        )
     }
     
-    fun scheduleOverdueCheck(todo: TodoData) {
+    override fun scheduleOverdueCheck(todo: TodoData) {
         if (!checkNotificationPermission()) return
         
         val overdueTime = todo.dueDate ?: return
@@ -96,23 +87,15 @@ class NotificationManager @Inject constructor(
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                overdueTime,
-                pendingIntent
-            )
-        } else {
-            alarmManager.setExact(
-                AlarmManager.RTC_WAKEUP,
-                overdueTime,
-                pendingIntent
-            )
-        }
+
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            overdueTime,
+            pendingIntent
+        )
     }
     
-    fun scheduleDailySummary() {
+    override fun scheduleDailySummary() {
         if (!checkNotificationPermission()) return
         
         val calendar = Calendar.getInstance().apply {
@@ -137,23 +120,15 @@ class NotificationManager @Inject constructor(
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                calendar.timeInMillis,
-                pendingIntent
-            )
-        } else {
-            alarmManager.setExact(
-                AlarmManager.RTC_WAKEUP,
-                calendar.timeInMillis,
-                pendingIntent
-            )
-        }
+
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            pendingIntent
+        )
     }
     
-    fun cancelTaskReminder(todoId: String) {
+    override fun cancelTaskReminder(todoId: String) {
         val intent = Intent(context, NotificationReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             context,
@@ -174,7 +149,7 @@ class NotificationManager @Inject constructor(
         alarmManager.cancel(overduePendingIntent)
     }
     
-    fun cancelAllReminders() {
+    override fun cancelAllReminders() {
         // This would need to be implemented based on your todo storage
         // For now, we'll just cancel the daily summary
         val intent = Intent(context, NotificationReceiver::class.java)
@@ -187,14 +162,14 @@ class NotificationManager @Inject constructor(
         alarmManager.cancel(pendingIntent)
     }
     
-    fun showImmediateNotification(todo: TodoData, type: String) {
+    override fun showImmediateNotification(todo: TodoData, type: String) {
         when (type) {
             "reminder" -> notificationService.showTaskReminderNotification(todo)
             "overdue" -> notificationService.showOverdueTaskNotification(todo)
         }
     }
     
-    fun showDailySummary(completedTasks: Int, pendingTasks: Int) {
+    override fun showDailySummary(completedTasks: Int, pendingTasks: Int) {
         notificationService.showDailySummaryNotification(completedTasks, pendingTasks)
     }
     
